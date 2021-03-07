@@ -17,7 +17,7 @@
                     <div class="card bodycontent shadow">
                         <div class="card-body d-flex">
                             <div class="col-xl-3">
-                                <select class="form-control border-primary nokamarwifi">
+                                <select class="form-control border-primary nokamarwifi" name="kamar">
                                     <option value="zero" selected>Pilih Kamar</option>
                                     <?php foreach ($kamar as $k) : ?>
                                         <option value="<?php echo $k['id_kamar'] ?>"><?php echo $k['no_kamar']; ?></option>
@@ -31,12 +31,13 @@
                                 <input type="text" class="form-control  border-primary jum" placeholder="0" value="0,00">
                             </div>
                             <div class="ml-auto">
-                                <button class="btn btn-primary" id="">Tambah <i class="fas fa-plus-circle"></i></button>
+                                <button class="btn btn-primary newtagihanwifi" id="<?php echo $this->uri->segment(2) ?>">Tambah <i class="fas fa-plus-circle"></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div id="alert-msg"></div>
             <div class="row">
                 <div class="col-xl">
                     <div class="card bodycontent shadow">
