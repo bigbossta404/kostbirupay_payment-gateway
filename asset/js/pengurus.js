@@ -441,3 +441,41 @@ $(document).ready(function() {
 
     });
 });
+
+$(document).ready(function() {
+    $(document).on('click', '.newtagihanwifi', function() {
+        var idbulan = $(this).attr('id');
+        var idkamar = $('select.nokamarwifi').val();
+        $.ajax({
+            url: "../pengurus/newTagihan_Wifi",
+            type: "POST",
+            data: {
+                idkamar: idkamar,
+                idbulan: idbulan,
+            },
+            dataType: "JSON",
+            success: function(data) {
+                if (data.error) {
+                    $("#alert-msg").html(data.alert);
+                }
+                if (data.success) {
+                    Swal.fire(
+                        'Tagihan Baru!',
+                        'Berhasil menambahkan tagihan baru.',
+                        'success'
+                    ).then((result) => {
+                        // Reload the Page
+                        location.reload();
+                    });
+                    $('.close').click();
+                    // location.reload(true)
+                }
+            }
+        });
+    });
+})
+
+.then((result) => {
+    // Reload the Page
+    location.reload();
+})
