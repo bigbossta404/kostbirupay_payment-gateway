@@ -418,4 +418,37 @@ class Pengurus extends CI_Controller
         $data = $this->tagihan->getDetKamar_Wifi($idkamar);
         echo json_encode($data);
     }
+
+    public function newTagihan_Wifi()
+    {
+
+        // $this->form_validation->set_rules('idkamar', 'IdKamar', 'required|numeric|greater_than[0]');
+        $bulan = $this->input->post('idbulan');
+        $rowbulan = explode('-', $bulan);
+        $this->form_validation->set_rules('idkamar', 'Idkamar', 'required|numeric|greater_than[0]');
+        if ($this->form_validation->run() == false) {
+            $alert = array(
+                'error' => true,
+                'alert' => '<div class="alert alert-warning"><b>ERROR:</b> Tidak valid!<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button> </div>',
+                'msg' => validation_errors()
+            );
+            echo json_encode($alert);
+        } else {
+            $alert = array(
+                'success' => true
+            );
+
+            $data = [
+                'id_bulan' => $rowbulan[0],
+                'id_kamar' => $this->input->post('idkamar'),
+                'ket' => 'wifi'
+            ];
+
+            $this->db->set('datecreate', 'NOW()', false);
+            $this->db->insert('pembayaran', $data);
+            echo json_encode($alert);
+        }
+    }
 }
