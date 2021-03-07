@@ -1,0 +1,511 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.sb-sidenav {
+    background: linear-gradient(0.40turn, #6060FF, #2202B7);
+    color: #ffffff;
+}
+
+.bg-register-image {
+    width: 48%;
+    background: url('../image/rightregister.png');
+    background-position: center;
+    background-size: 120%;
+    background-repeat: no-repeat;
+}
+
+.rowregis {
+    display: flex;
+    justify-content: center;
+}
+
+.btndaftar {
+    width: 20%;
+}
+
+.container-fluid {
+    margin-top: 20px;
+}
+
+.beranda {
+    z-index: 1;
+    position: relative;
+    padding: 0 20% 0 20%;
+}
+
+input,
+select {
+    font-size: .9rem !important;
+}
+
+.pickbulan .form-group {
+    margin-bottom: 0;
+}
+
+.monthpick {
+    width: 20%;
+}
+
+.btn-daftar {
+    background-color: #f1822f !important;
+    border-color: #a19489 !important;
+}
+
+.sb-menu-bottom {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+#sidebarToggle {
+    color: #16478e;
+}
+
+.closeToggle {
+    visibility: hidden;
+    clear: both;
+    display: none;
+}
+
+.closeToggle:hover {
+    color: #ffffff;
+}
+
+.navbar {
+    box-shadow: 2px 1px 9px 0px #88888880;
+}
+
+.sb-menu-sosmed {
+    display: flex;
+    background-color: #12126c;
+    color: #ffffff;
+    justify-content: center;
+}
+
+.sb-menu-sosmed a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.sb-menu-sosmed p {
+    margin: 10px;
+    bottom: 0;
+    font-size: 13px;
+    display: flex;
+    vertical-align: baseline;
+}
+
+.bodycontent {
+    margin-bottom: 20px;
+}
+
+#klikbox:hover {
+    text-decoration: none;
+}
+
+.menuaktif {
+    color: #ffffff;
+    background-color: #5562ff;
+    border-left: solid 5px #fff;
+}
+
+.cardopen {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.selectbox {
+    display: flex !important;
+    flex-direction: unset;
+    align-items: center;
+    width: 100%;
+    padding: 30px;
+    border-radius: 40px;
+    margin-bottom: 0;
+}
+
+.contentkost {
+    background-color: #485be0;
+    box-shadow: #40404042 0px 1px 4px 2px;
+}
+
+.contentlistrik {
+    background-color: #485be0;
+    box-shadow: #40404042 0px 1px 4px 2px;
+}
+
+.contentwifi {
+    background-color: #485be0;
+    box-shadow: #40404042 0px 1px 4px 2px;
+}
+
+.bukabtn {
+    position: absolute;
+    right: 0;
+}
+
+.icon {
+    width: 20%;
+    /* padding-left: 5%; */
+    /* padding-right: 2%; */
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+    color: #ffffff;
+}
+
+.sb-nav-link-icon {
+    width: 20px;
+    padding-right: 8px;
+}
+
+.texticon {
+    margin-left: 0;
+}
+
+.katalog {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.harga {
+    color: #ffffff;
+    font-size: 13px;
+}
+
+#containerlogin {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.logologin {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.headcontent {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.btn_group {
+    margin-left: 20px;
+}
+
+#tipelist {
+    box-shadow: 0px 0px 3px 0px #00000087;
+}
+
+#nonlunas {
+    background-color: rgb(124, 0, 0);
+    color: #ffffff;
+}
+
+#lunas {
+    background-color: rgb(17, 114, 17);
+    color: #ffffff;
+}
+
+.btn-default.noactive {
+    color: #4f47eb !important;
+}
+
+.btn-default.noactive:hover {
+    background-color: #dee2e6 !important;
+}
+
+.btn-default.active {
+    background-color: #4f47eb;
+    color: #ffffff;
+}
+
+.rowtagihan {
+    background: none;
+    border: none;
+}
+
+.rowtagihan:focus,
+.rowtagihan:focus {
+    border: none;
+    outline: none;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #4f47eb;
+    border-color: #4f47eb;
+}
+
+.container-fluid {
+    margin-top: 20px;
+}
+
+.sb-menu-sosmed:hover {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.sb-menu-top {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.dompet {
+    margin-left: 18px;
+    color: #ffffff;
+    border: 3px solid #ff8484;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 10px;
+    /* margin-left: 30px; */
+    font-size: 12px;
+}
+
+.dompet:hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.dompet {
+    display: block;
+}
+
+.dashboard h3 {
+    color: #ffffff;
+}
+
+.dashboard p {
+    font-size: 15px;
+    margin-left: 18px;
+}
+
+.dashboard:hover {
+    color: #ffffff;
+}
+
+.menupilih {
+    color: #ffffff;
+}
+
+.menupilih:hover {
+    color: #ffffff;
+    background-color: #5562ff;
+}
+
+.statuspay {
+    color: #ffffff;
+}
+
+.vectorimg {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imgupdate {
+    position: fixed;
+    bottom: 0;
+    height: 360px;
+    opacity: 65%;
+}
+
+.contentpengurus {
+    z-index: 1;
+    position: relative;
+}
+
+.contentdetuser {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ========================== Transaksi ================================ */
+
+.container-transaksi {
+    padding: 40px 90px 10px 90px;
+}
+
+.bodytransaksi {
+    display: flex;
+}
+
+.bodytransaksi-left {
+    margin-bottom: 20px;
+    width: 50%;
+    position: relative;
+    float: left;
+    margin-bottom: 30px;
+    background-size: cover;
+    /* text-transform: uppercase; */
+    color: black;
+    border: 1px solid rgb(0 0 0 / 27%) !important;
+}
+
+.bodytransaksi-right {
+    margin-bottom: 20px;
+    width: 50%;
+    justify-content: center;
+    /* height: 100% !important; */
+    position: relative;
+    float: left;
+    padding: 5%;
+    margin-bottom: 30px;
+    background-size: cover;
+    /* text-transform: uppercase; */
+    color: black;
+    border: 1px solid rgb(0 0 0 / 27%) !important;
+}
+
+.ribbon:nth-child(even) {
+    margin-right: 4%;
+}
+
+@media (max-width: 500px) {
+    .ribbon {
+        width: 100%;
+    }
+    .ribbon:nth-child(even) {
+        margin-right: 0%;
+    }
+}
+
+.ribbon4 {
+    position: absolute;
+    top: 0px;
+    z-index: 1;
+    padding: 8px 30px;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #00B3ED;
+    box-shadow: -1px 2px 3px rgba(0, 0, 0, .3);
+}
+
+.ribbon4:before,
+.ribbon4:after {
+    content: "";
+    position: absolute;
+}
+
+.ribbon4:before {
+    z-index: 0;
+    width: 7px;
+    height: 50px;
+    top: 0;
+    left: -6.5px;
+    padding: 0 0 7px;
+    background: inherit;
+    border-radius: 5px 0 0 5px;
+}
+
+.ribbon4:after {
+    width: 5px;
+    height: 6px;
+    bottom: -6px;
+    left: -4.8px;
+    background: lightblue;
+    border-radius: 5px 0 0 5px;
+}
+
+.invoice {
+    margin-top: 40px;
+}
+
+.lunas {
+    display: flex;
+}
+
+.tgl-lunas {
+    width: 50%;
+}
+
+.metode-bayar {
+    /* margin-left: 25%; */
+}
+
+.boxdetakun {
+    /* border: 2px solid #000000; */
+}
+
+.penerimabayar {
+    margin-top: 5%;
+}
+
+.vl {
+    border-left: 3px dashed rgb(128, 128, 128);
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+}
+
+.boxdetuser {
+    padding: 40px;
+}
+
+.content-text-block .col-xs-6 {
+    width: 100% !important;
+}
+
+#traText {
+    font-weight: 600;
+}
+
+#nokamar {
+    font-weight: 600;
+}
+
+table {
+    color: #000 !important;
+}
+
+@media only screen and (max-width: 768px) {
+    .closeToggle {
+        position: absolute;
+        color: #ffffff;
+        display: inline-block;
+        z-index: 9999999;
+        right: 0;
+        margin-right: 20px;
+        margin-top: 10px;
+        visibility: visible;
+    }
+    .sb-sidenav-toggled {
+        overflow-y: hidden;
+    }
+    .beranda {
+        padding: 15px;
+    }
+    .vectorimg {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        /* left: 50%; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .imgupdate {
+        height: 200px;
+        opacity: 100%;
+    }
+    .icon {
+        margin-right: 6%;
+    }
+}
