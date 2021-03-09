@@ -41,6 +41,7 @@ class Pengurus extends CI_Controller
             $data['pengurus'] = $this->akun->getakunpengurus($username);
             $data['kamar'] = $this->akun->getkamar();
 
+
             $data['title'] = 'Akun User';
             $this->load->view('layout/pengurus/header_pengurus', $data);
             $this->load->view('pages/pengurus/akun_user', $data);
@@ -90,6 +91,7 @@ class Pengurus extends CI_Controller
             // $username = $this->input->post('username');
             $data['user'] = $this->akun->getakun($username);
             $data['kamar'] = $this->akun->getkamar();
+            $data['detkamar'] = $this->akun->another_getkamar($username);
             // var_dump($data['user']);
             $data['title'] = 'Detail User';
             $this->load->view('layout/pengurus/header_pengurus', $data);
@@ -161,6 +163,7 @@ class Pengurus extends CI_Controller
                     'active' => 1,
                     'img' => 'default.jpg'
                 ];
+
                 echo json_encode($alert);
                 $this->akun->daftar($data);
             }
@@ -238,6 +241,7 @@ class Pengurus extends CI_Controller
             $id = $this->input->post('id', true);
             $user = $this->input->post('user');
             $cekpass = $this->input->post('newpass');
+            $cekwifi = $this->input->post('tagihanwifi');
             $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
                 'required' => 'Nama wajib isi'
             ]);
@@ -261,6 +265,10 @@ class Pengurus extends CI_Controller
                 'required' => 'Pilih kamar',
                 'numeric' => 'Data kamar tidak valid'
             ]);
+            $this->form_validation->set_rules('tagihanwifi', 'Tagihanwifi', 'required|trim|numeric', [
+                'required' => 'Isi nominal tagihan wifi',
+                'numeric' => 'Data tagihan tidak valid'
+            ]);
 
             if ($this->form_validation->run() == false) {
                 $data = array(
@@ -270,7 +278,8 @@ class Pengurus extends CI_Controller
                     'telp_error' => form_error('telp'),
                     'username_error' => form_error('user'),
                     'newpassword_error' => form_error('newpass'),
-                    'kamar_error' => form_error('kamar')
+                    'kamar_error' => form_error('kamar'),
+                    'tagihanwifi_error' => form_error('tagihanwifi')
                 );
                 echo json_encode($data);
             } else {
@@ -288,7 +297,13 @@ class Pengurus extends CI_Controller
                         'alamat' => $this->input->post('alamat', true),
                         'id_kamar' => $this->input->post('kamar', true)
                     ];
+
+
+                    $wifi = "UPDATE kamar k JOIN pengguna_data pd ON pd.id_kamar = k.id_kamar SET wifi = " . $cekwifi . " WHERE pd.id_pengguna = " . $id . " ";
+                    $this->db->query($wifi);
+
                     $this->db->update('pengguna_data', $data, array('id_pengguna' => $id));
+
                     echo json_encode($alert);
                 } elseif ($cekpass != null) {
                     $alert = array(
@@ -304,7 +319,13 @@ class Pengurus extends CI_Controller
                         'alamat' => $this->input->post('alamat', true),
                         'id_kamar' => $this->input->post('kamar', true)
                     ];
+
+                    $wifi = "UPDATE kamar k JOIN pengguna_data pd ON pd.id_kamar = k.id_kamar SET wifi = " . $cekwifi . " WHERE pd.id_pengguna = " . $id . " ";
+                    $this->db->query($wifi);
+
+
                     $this->db->update('pengguna_data', $data, array('id_pengguna' => $id));
+
                     echo json_encode($alert);
                 } else {
                     $alert = array(
