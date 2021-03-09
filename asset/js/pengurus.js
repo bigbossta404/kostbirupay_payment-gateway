@@ -181,6 +181,7 @@ $(document).on('click', '.btn_up_users', function() {
     var newpass = $('#newpassword').val();
     var pass = $('#password').val();
     var kamar = $('#kamar').val();
+    var tagihanwifi = $('#tagihanwifi').val();
 
     $.ajax({
         url: user + "/update",
@@ -194,7 +195,9 @@ $(document).on('click', '.btn_up_users', function() {
             user: user,
             newpass: newpass,
             pass: pass,
-            kamar: kamar
+            kamar: kamar,
+            tagihanwifi: tagihanwifi,
+
         },
         dataType: "JSON",
         success: function(data) {
@@ -229,6 +232,11 @@ $(document).on('click', '.btn_up_users', function() {
                     $('#newpassword_error').html(data.newpassword_error);
                 } else {
                     $('#newpassword_error').html('');
+                }
+                if (data.tagihanwifi_error != '') {
+                    $('#tagihanwifi_error').html(data.tagihanwifi_error);
+                } else {
+                    $('#tagihanwifi_error').html('');
                 }
             }
             if (data.success) {
@@ -473,9 +481,4 @@ $(document).ready(function() {
             }
         });
     });
-})
-
-.then((result) => {
-    // Reload the Page
-    location.reload();
 })

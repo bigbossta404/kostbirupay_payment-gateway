@@ -33,6 +33,12 @@
                             <!-- <p id="nokamar">No. Kamar <?= $user['id_kamar']; ?></p> -->
                         </div>
                         <div class="sb-menu-top">
+                            <a class="nav-link menupilih <?= $this->uri->segment(1) == 'pengurus' ? 'menuaktif' : '' ?>" href="<?= base_url('pengurus'); ?>">
+                                <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                                <div class="texticon">
+                                    Beranda
+                                </div>
+                            </a>
                             <a class="nav-link menupilih <?= $this->uri->segment(1) == 'pembayaran-wifi' ? 'menuaktif' : '' ?>" href="<?= base_url('pembayaran-wifi'); ?>">
                                 <div class="sb-nav-link-icon"><i class="fas fa-scroll"></i></div>
                                 <div class="texticon">
@@ -43,12 +49,6 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-wallet"></i></div>
                                 <div class="texticon">
                                     Keuangan
-                                </div>
-                            </a>
-                            <a class="nav-link menupilih" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                                <div class="sb-nav-link-icon"><i class="fas fa-hourglass"></i></div>
-                                <div class="texticon">
-                                    Riwayat
                                 </div>
                             </a>
                             <a class="nav-link menupilih <?= $this->uri->segment(1) == 'user' ? 'menuaktif' : '' ?>" href="<?= base_url('user'); ?>">

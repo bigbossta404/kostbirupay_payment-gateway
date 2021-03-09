@@ -334,7 +334,7 @@ class Tagihan extends CI_Model
 
     function getTransaksi_Wifi($id)
     {
-        $this->db->select('CONCAT("TGWIFI",pbw.id_bayar) idtagih, k.no_kamar nokamar, k.wifi harga, trw.status status');
+        $this->db->select('CONCAT("TGWIFI",pbw.id_bayar) idtagih, k.no_kamar nokamar, k.wifi hargawifi, trw.status status, harga hargadeal');
         $this->db->from('pembayaran pbw');
         $this->db->join('list_bulan bl', 'pbw.id_bulan = bl.id_bulan');
         $this->db->join('kamar k', 'k.id_kamar = pbw.id_kamar', 'left');

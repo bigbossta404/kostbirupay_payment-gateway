@@ -57,6 +57,11 @@
                                 <small class="text-danger" id="kamar_error"></small>
                             </div>
                             <div class="form-group">
+                                <label for="">Tagihan</label>
+                                <input type="text" name="tagihanwifi" id="tagihanwifi" class="form-control border border-info" value="<?= $detkamar['wifi'] ?>">
+                                <small class="text-danger" id="tagihanwifi_error"></small>
+                            </div>
+                            <div class="form-group">
                                 <button type="submit" class="btn btn-primary w-100 mb-2 text-white btn_up_users">Simpan</button>
                                 <a href="<?= base_url('user') ?>" class="btn btn-danger w-100">Batal</a>
                             </div>

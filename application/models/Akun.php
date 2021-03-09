@@ -25,11 +25,20 @@ class Akun extends CI_Model
 
     function getkamar()
     {
-        $this->db->select('id_kamar idkamar, no_kamar, cabang, kost, status');
+        $this->db->select('id_kamar idkamar, no_kamar, cabang, kost,wifi,listrik, status');
         $this->db->from('kamar k');
         $this->db->order_by('id_kamar', 'asc');
         $query = $this->db->get();
         return $query->result_array();
+    }
+    function another_getkamar($username)
+    {
+        $this->db->select('k.id_kamar idkamar, no_kamar, cabang, kost, wifi, listrik, status');
+        $this->db->from('kamar k');
+        $this->db->join('pengguna_data pd', 'k.id_kamar = pd.id_kamar');
+        $this->db->where('pd.username', $username);
+        $query = $this->db->get();
+        return $query->row_array();
     }
     function hapusByID($id_pengguna)
     {
