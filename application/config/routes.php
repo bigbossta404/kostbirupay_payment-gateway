@@ -76,6 +76,7 @@ $route['kost/transaksikost-(:any)'] = 'pengguna/det_transaksi/$1';
 $route['pengurus'] = 'pengurus/index';
 $route['pembayaran-wifi'] = 'pengurus/index_bayarwifi';
 $route['pembayaran-wifi/(:any)-(:any)'] = 'pengurus/index_transaksiwifi/$1-$2';
+$route['keuangan'] = 'pengurus/index_keuangan';
 // $route['transaksi-wifi/'] = 'pengurus/getTransaksi_wifi_bulan';
 $route['user'] = 'pengurus/index_akunuser';
 $route['user/(:any)'] = 'pengurus/getdetakunuser/$1';

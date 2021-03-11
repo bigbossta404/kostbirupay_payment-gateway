@@ -15,10 +15,24 @@ class Pengurus extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('akses') == '2') {
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
             $username = $this->session->userdata('username');
 
-            $data['user'] = $this->akun->getakunpengurus($username);
+            $data['pengurus'] = $this->akun->getakunpengurus($username);
+            $data['getdebitwifi'] = $this->transaksi->get_monthly_wifi();
+            $data['getdebitlistrik'] = $this->transaksi->get_monthly_listrik();
+            $data['getsaldo'] = $this->transaksi->get_saldo();
+            $data['online'] = $this->akun->getOnline();
+            $data['persen'] = $this->tagihan->getPercentWifi();
+            // echo $data['getdebit']['uangwifi'];
+            $data['title'] = 'Dashboard';
+            $this->load->view('layout/pengurus/header_pengurus', $data);
+            $this->load->view('pages/pengurus/pengurus_wifi', $data);
+            $this->load->view('layout/pengurus/footer_pengurus');
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            $username = $this->session->userdata('username');
+
+            $data['pengurus'] = $this->akun->getakunpengurus($username);
             $data['getdebitwifi'] = $this->transaksi->get_monthly_wifi();
             $data['getdebitlistrik'] = $this->transaksi->get_monthly_listrik();
             $data['getsaldo'] = $this->transaksi->get_saldo();
@@ -87,8 +101,9 @@ class Pengurus extends CI_Controller
 
     public function getdetakunuser($username)
     {
-        if ($this->session->userdata('akses') == '2') {
-            // $username = $this->input->post('username');
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+            $pengurususer = $this->session->userdata('username');
+            $data['pengurus'] = $this->akun->getakunpengurus($pengurususer);
             $data['user'] = $this->akun->getakun($username);
             $data['kamar'] = $this->akun->getkamar();
             $data['detkamar'] = $this->akun->another_getkamar($username);
@@ -97,6 +112,8 @@ class Pengurus extends CI_Controller
             $this->load->view('layout/pengurus/header_pengurus', $data);
             $this->load->view('pages/pengurus/det_user', $data);
             $this->load->view('layout/pengurus/footer_pengurus');
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
@@ -104,7 +121,7 @@ class Pengurus extends CI_Controller
 
     public function buatakun()
     {
-        if ($this->session->userdata('akses') == '2') {
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
             $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
                 'required' => 'Nama wajib isi'
             ]);
@@ -167,18 +184,26 @@ class Pengurus extends CI_Controller
                 echo json_encode($alert);
                 $this->akun->daftar($data);
             }
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
     }
     public function getactivedata($id_pengguna)
     {
-        $data = $this->akun->getakunByID($id_pengguna);
-        echo json_encode($data);
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+            $data = $this->akun->getakunByID($id_pengguna);
+            echo json_encode($data);
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
+        } else {
+            redirect('/');
+        }
     }
     public function updateactive()
     {
-        if ($this->session->userdata('akses') == '2') {
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
             $this->form_validation->set_rules('active', 'Active', 'required|trim|numeric', [
                 'required' => 'Wajib pilih mas',
                 'numeric' => 'Gk usah jail reload dulu'
@@ -225,6 +250,8 @@ class Pengurus extends CI_Controller
                     echo json_encode($alert);
                 }
             }
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
@@ -232,12 +259,18 @@ class Pengurus extends CI_Controller
 
     public function hapusakun($id)
     {
-        $this->akun->hapusByID($id);
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+            $this->akun->hapusByID($id);
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
+        } else {
+            redirect('/');
+        }
     }
 
     public function updateuser()
     {
-        if ($this->session->userdata('akses') == '2') {
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
             $id = $this->input->post('id', true);
             $user = $this->input->post('user');
             $cekpass = $this->input->post('newpass');
@@ -335,26 +368,31 @@ class Pengurus extends CI_Controller
                     echo json_encode($alert);
                 }
             }
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
     }
     public function index_bayarwifi()
     {
-        if ($this->session->userdata('akses') == '2') {
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+            $username = $this->session->userdata('username');
+            $data['pengurus'] = $this->akun->getakunpengurus($username);
             $data['bulancek'] = $this->tagihan->wifionbulan();
-
             $data['title'] = 'Detail User';
             $this->load->view('layout/pengurus/header_pengurus', $data);
             $this->load->view('pages/pengurus/pem_wifi', $data);
             $this->load->view('layout/pengurus/footer_pengurus');
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
     }
     public function readtagihanwifi()
     {
-        if ($this->session->userdata('akses') == '2') {
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
             $list = $this->tagihan->get_datatablesTwifi();
             $data = array();
             $i = 1;
@@ -375,6 +413,8 @@ class Pengurus extends CI_Controller
             );
 
             echo json_encode($output);
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
@@ -420,7 +460,9 @@ class Pengurus extends CI_Controller
 
     public function index_transaksiwifi($idwaktu)
     {
-        if ($this->session->userdata('akses') == '2') {
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+            $username = $this->session->userdata('username');
+            $data['pengurus'] = $this->akun->getakunpengurus($username);
             $id = explode('-', $idwaktu);
             $data['det_tagihan_wifi'] = $this->tagihan->getTransaksi_Wifi($id);
             $data['kamar'] = $this->tagihan->getKamar_Wifi($id);
@@ -429,6 +471,8 @@ class Pengurus extends CI_Controller
             $this->load->view('layout/pengurus/header_pengurus', $data);
             $this->load->view('pages/pengurus/transaksi_wifi', $data);
             $this->load->view('layout/pengurus/footer_pengurus');
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
@@ -470,6 +514,23 @@ class Pengurus extends CI_Controller
             $this->db->set('datecreate', 'NOW()', false);
             $this->db->insert('pembayaran', $data);
             echo json_encode($alert);
+        }
+    }
+
+    public function index_keuangan()
+    {
+        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+            $username = $this->session->userdata('username');
+            $data['pengurus'] = $this->akun->getakunpengurus($username);
+            $data['getsaldo'] = $this->transaksi->get_saldo();
+            $data['title'] = 'Keuangan';
+            $this->load->view('layout/pengurus/header_pengurus', $data);
+            $this->load->view('pages/pengurus/keuangan', $data);
+            $this->load->view('layout/pengurus/footer_pengurus');
+        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
+            echo 'laman pengurus listrik';
+        } else {
+            redirect('/');
         }
     }
 }

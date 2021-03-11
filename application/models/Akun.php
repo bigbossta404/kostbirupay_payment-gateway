@@ -91,11 +91,11 @@ class Akun extends CI_Model
     }
     //========== PENGURUS
 
-    function getakunpengurus($username)
+    function getakunpengurus($pengurususer)
     {
         $this->db->select('*');
         $this->db->from('pengurus_data');
-        $this->db->where('username', $username);
+        $this->db->where('username', $pengurususer);
         $query = $this->db->get();
         return $query->row_array();
     }

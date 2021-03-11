@@ -29,8 +29,10 @@
                             <a class="nav-link" id="logo" href="<?= base_url('beranda') ?>">
                                 <img src="<?= base_url('asset/image/logo.png') ?>" alt="" height="80">
                             </a>
-
                             <!-- <p id="nokamar">No. Kamar <?= $user['id_kamar']; ?></p> -->
+                        </div>
+                        <div class="title-tags" style="background-color: #08006d; padding: 10px; display:flex; align-items: center; justify-content:center">
+                            Pengurus <?= $pengurus['bagian']; ?>
                         </div>
                         <div class="sb-menu-top">
                             <a class="nav-link menupilih <?= $this->uri->segment(1) == 'pengurus' ? 'menuaktif' : '' ?>" href="<?= base_url('pengurus'); ?>">
@@ -45,7 +47,7 @@
                                     Pembayaran
                                 </div>
                             </a>
-                            <a class="nav-link menupilih" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <a class="nav-link menupilih <?= $this->uri->segment(1) == 'keuangan' ? 'menuaktif' : '' ?>" href="<?= base_url('keuangan'); ?>">
                                 <div class="sb-nav-link-icon"><i class="fas fa-wallet"></i></div>
                                 <div class="texticon">
                                     Keuangan
