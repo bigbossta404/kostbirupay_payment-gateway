@@ -124,9 +124,8 @@ class Snap extends CI_Controller
 		$pilih = $this->input->post('pilih');
 		if ($pilih == 'pay-kost') {
 			$result = json_decode($this->input->post('result_data'), true);
-
 			$data = [
-				'id_transkost' => $result['order_id'],
+				'id_transaksi' => $result['order_id'],
 				'id_pengguna' => $id_pengguna,
 				'id_bayar' => $idbayar,
 				'tgl_invoice' => $result['transaction_time'],
@@ -137,7 +136,7 @@ class Snap extends CI_Controller
 				'pdf_url' => $result['pdf_url'],
 				'status' => $result['status_code']
 			];
-			$simpan = $this->db->insert('transaksi_kost', $data);
+			$simpan = $this->db->insert('transaksi', $data);
 
 			if ($simpan) {
 				redirect('kost');
@@ -148,7 +147,7 @@ class Snap extends CI_Controller
 			$result = json_decode($this->input->post('result_data'), true);
 
 			$data = [
-				'id_translistrik' => $result['order_id'],
+				'id_transaksi' => $result['order_id'],
 				'id_pengguna' => $id_pengguna,
 				'id_bayar' => $idbayar,
 				'tgl_invoice' => $result['transaction_time'],
@@ -159,7 +158,7 @@ class Snap extends CI_Controller
 				'pdf_url' => $result['pdf_url'],
 				'status' => $result['status_code']
 			];
-			$simpan = $this->db->insert('transaksi_listrik', $data);
+			$simpan = $this->db->insert('transaksi', $data);
 
 			if ($simpan) {
 				redirect('listrik');
@@ -170,7 +169,7 @@ class Snap extends CI_Controller
 			$result = json_decode($this->input->post('result_data'), true);
 
 			$data = [
-				'id_transwifi' => $result['order_id'],
+				'id_transaksi' => $result['order_id'],
 				'id_pengguna' => $id_pengguna,
 				'id_bayar' => $idbayar,
 				'tgl_invoice' => $result['transaction_time'],
@@ -181,7 +180,7 @@ class Snap extends CI_Controller
 				'pdf_url' => $result['pdf_url'],
 				'status' => $result['status_code']
 			];
-			$simpan = $this->db->insert('transaksi_wifi', $data);
+			$simpan = $this->db->insert('transaksi', $data);
 
 			if ($simpan) {
 				redirect('wifi');

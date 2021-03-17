@@ -4,20 +4,15 @@
             <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
         </nav>
         <div class="container-fluid contentpengurus">
-            <div class="headcontent">
-                <h2>Keuangan</h2>
-            </div>
             <div class="row">
-
-                <!-- Earnings (Monthly) Card Example -->
-                <div class="col-xl-3 col-md-6 mb-4">
+                <div class="col-xl-3 col-md-6 mb-4 mt-2">
                     <div class="card border-left-primary shadow h-100 py-2">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                         Total Kas</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><span class="h6 text-gray-800">Rp.</span> <?= ($getsaldo['kaswifi'] == null) ?  "0" : number_format($getsaldo['kaswifi'], '0', '', '.'); ?></div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><span class="h6 text-gray-800">Rp.</span> <span id="saldo"><?= ($getsaldo['kaswifi'] == null) ?  "0" : number_format($getsaldo['kaswifi'], '0', '', '.'); ?></span></div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-wallet fa-2x text-gray-300"></i>
@@ -26,7 +21,67 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xl col-md-6 mb-4 mt-2">
+                    <div class="card border-left-primary shadow py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="mb-0 fs-5 text-dark">
+                                        <span style="padding: 10px; background-color: #dadada;">
+                                            Akses tombol di samping untuk kelola keuangan
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="btncash mr-3">
+                                    <button type="button" class="btn btn-success" id="btncashin">
+                                        Cash In <i class="fas fa-plus-circle"></i>
+                                    </button>
+                                </div>
+                                <div class="btncash">
+                                    <button type="button" class="btn btn-danger" id="btncashout">
+                                        Cash Out <i class="fas fa-minus-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Pending Requests Card Example -->
+            </div>
+            <div class="row boxcashin style=" style="visibility:hidden; display:none">
+                <div class="col-xl ">
+                    <div class="card bodycontent shadow">
+                        <div class="card-body d-flex">
+                            <div class="col-xl-3">
+                                <input type="text" class="form-control  border-primary jumIn" name="jumIn" placeholder="Rp 0,00">
+                            </div>
+                            <div class="col-xl-3">
+                                <input type="text" class="form-control  border-primary ketIn" name="ketIn" placeholder="Keterangan">
+                            </div>
+                            <div class="ml-auto">
+                                <button class="btn btn-success cashin" id="">Setor <i class="fas fa-plus-circle"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row boxcashout style=" style="visibility:hidden; display:none">
+                <div class="col-xl ">
+                    <div class="card bodycontent shadow">
+                        <div class="card-body d-flex">
+                            <div class="col-xl-3">
+                                <input type="text" class="form-control  border-primary jumOut" placeholder="Rp 0,00" value="">
+                            </div>
+                            <div class="col-xl-3">
+                                <input type="text" class="form-control  border-primary ketOut" placeholder="Keterangan" value="">
+                            </div>
+                            <div class="ml-auto">
+                                <button class="btn btn-danger cashout" id="">Tarik <i class="fas fa-minus-circle"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row">
 
@@ -51,9 +106,11 @@
                         </div>
                         <!-- Card Body -->
                         <div class="card-body">
-                            <table id="table_keuangan" class="table table-striped table-bordered hover " width="100%" cellspacing="0">
+                            <!-- <div class="tab-pane table-responsive"> -->
+                            <table id="table_keuangan" class="table wrap table-striped table-bordered hover   order-column" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
+
                                         <td>No.</td>
                                         <td>Pemasukan</td>
                                         <td>Pengeluaran</td>
@@ -65,6 +122,7 @@
                                 <tbody>
                                 </tbody>
                             </table>
+                            <!-- </div> -->
                         </div>
                     </div>
                 </div>

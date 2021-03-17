@@ -58,7 +58,7 @@
                                             <tr>
                                                 <td><?php echo $detwifi['idtagih']; ?></td>
                                                 <td><?php echo $detwifi['nokamar']; ?></td>
-                                                <td><?php echo ($detwifi['status'] == 200) ? $detwifi['hargadeal'] : $detwifi['hargawifi']  ?></td>
+                                                <td><?php echo ($detwifi['status'] == 200) ? 'Rp. ' . number_format($detwifi['hargadeal'], '0', '', '.') : 'Rp. ' . number_format($detwifi['hargawifi'], '0', '', '.')  ?></td>
                                                 <td>
                                                     <?php if ($detwifi['status'] == '200') : ?><span class='badge bg-success' style='color:white'>Lunas</span>
                                                     <?php elseif ($detwifi['status'] == '201') : ?><span class='badge bg-warning' style='color:black'>Pending</span>

@@ -48,7 +48,7 @@ class Tagihan extends CI_Model
         $this->db->from('pembayaran pbk');
         $this->db->join('list_bulan bl', 'pbk.id_bulan = bl.id_bulan');
         $this->db->join('kamar k', 'k.id_kamar = pbk.id_kamar');
-        $this->db->join('transaksi_kost tk', 'tk.id_bayar = pbk.id_bayar', 'left');
+        $this->db->join('transaksi tk', 'tk.id_bayar = pbk.id_bayar', 'left');
         $this->db->where('pbk.ket', 'kost');
         $i = 0;
 
@@ -115,7 +115,7 @@ class Tagihan extends CI_Model
         $this->db->from('pembayaran pbl');
         $this->db->join('list_bulan bl', 'pbl.id_bulan = bl.id_bulan');
         $this->db->join('kamar k', 'k.id_kamar = pbl.id_kamar');
-        $this->db->join('transaksi_listrik tk', 'tk.id_bayar = pbl.id_bayar', 'left');
+        $this->db->join('transaksi tk', 'tk.id_bayar = pbl.id_bayar', 'left');
         $this->db->where('pbl.ket', 'listrik');
 
         $i = 0;
@@ -182,7 +182,7 @@ class Tagihan extends CI_Model
         $this->db->from('pembayaran pbw');
         $this->db->join('list_bulan bl', 'pbw.id_bulan = bl.id_bulan');
         $this->db->join('kamar k', 'k.id_kamar = pbw.id_kamar');
-        $this->db->join('transaksi_wifi trw', 'trw.id_bayar = pbw.id_bayar', 'left');
+        $this->db->join('transaksi trw', 'trw.id_bayar = pbw.id_bayar', 'left');
         $this->db->where('pbw.ket', 'wifi');
         $i = 0;
 
@@ -327,7 +327,7 @@ class Tagihan extends CI_Model
     {
         $query = $this->db->query("
         SELECT 
-        CAST((SELECT COUNT(*) FROM transaksi_wifi WHERE MONTH(tgl_lunas) = MONTH(CURRENT_TIMESTAMP))/
+        CAST((SELECT COUNT(*) FROM transaksi WHERE MONTH(tgl_lunas) = MONTH(CURRENT_TIMESTAMP) AND id_transaksi LIKE '%WIFI%')/
         (SELECT COUNT(*) FROM pengguna_data WHERE active = 1)*100 AS UNSIGNED) AS persenwifi");
         return $query->row_array();
     }
@@ -339,7 +339,7 @@ class Tagihan extends CI_Model
         $this->db->join('list_bulan bl', 'pbw.id_bulan = bl.id_bulan');
         $this->db->join('kamar k', 'k.id_kamar = pbw.id_kamar', 'left');
         $this->db->join('pengguna_data p', ' k.id_kamar = p.id_kamar', 'left');
-        $this->db->join('transaksi_wifi trw', 'trw.id_bayar = pbw.id_bayar', 'left');
+        $this->db->join('transaksi trw', 'trw.id_bayar = pbw.id_bayar', 'left');
         $this->db->where('pbw.id_bulan', $id[0]);
         $this->db->where('YEAR(pbw.datecreate)', $id[1]);
         $this->db->where('pbw.ket', 'wifi');

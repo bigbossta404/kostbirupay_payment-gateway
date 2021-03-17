@@ -294,34 +294,47 @@ $(document).on('click', '#btntagihanwifi', function() {
         }
     });
 });
-//================= GetTransaksi Wifi by Month
 
-// $(document).on('click', '.bulanwifi', function(e) {
-//     e.preventDefault();
-//     // var idbulan = $(this).attr('id');
-//     var idMY = $(this).attr('id').split(" ");
-//     var idbulan = idMY[0];
-//     var tahun = idMY[1];
-//     $.ajax({
-//         url: "pembayaran-wifi/" + idbulan + "/" + tahun,
-//         data: {
-//             idbulan: idbulan,
-//             tahun: tahun
-//         },
-//         type: "post",
-//         dataType: "JSON",
-//         success: function(data) {
-//             console.log(data.msg)
-//                 // window.location = $(this).attr('href');
-//         }
-//     });
-//     window.location = $(this).attr('href');
-//     // window.location = $(this).attr('href');
-// });
 
 //================= DATA TABLE USERS
 
+var tablekeuangan;
+$(document).ready(function() {
 
+    //datatables
+    tablekeuangan = $('#table_keuangan').DataTable({
+        responsive: true,
+        scrollX: true,
+        scrollCollapse: true,
+        "createdRow": function(row, data, index) {
+            if (data[2] != 'Rp. 0') {
+                $(row).find('td:eq(1),td:eq(2)').css({ 'background-color': '#b00000', 'color': 'white' });
+            }
+            if (data[2] == 'Rp. 0') {
+                $(row).find('td:eq(1),td:eq(2)').css({ 'background-color': 'rgb(6 176 0)', 'color': 'white' });
+            }
+        },
+        "language": {
+            "emptyTable": "Tidak Ada Tagihan",
+            "processing": "Memuat Data",
+            "zeroRecords": "Data Tidak Ditemukan"
+        },
+        "processing": true, //Feature control the processing indicator.
+        "serverSide": true, //Feature control DataTables' server-side processing mode.
+        "order": [],
+        ajax: {
+            url: "pengurus/getKeuangan",
+            type: "POST"
+        },
+
+        "columnDefs": [{
+            "targets": [0, 4],
+            "className": "text-center",
+            "orderable": false
+        }]
+
+    });
+});
 var tableuser;
 $(document).ready(function() {
 
@@ -353,6 +366,7 @@ $(document).ready(function() {
 
     //datatables
     tablewifi = $('#tabletagihanwifi_peng').DataTable({
+
         "language": {
             "emptyTable": "Tidak Ada Tagihan",
             "processing": "Memuat Data",
@@ -482,3 +496,64 @@ $(document).ready(function() {
         });
     });
 })
+
+$(document).ready(function() {
+    $(document).on('click', '#btncashin', function() {
+        if ($(".boxcashin").is(':visible')) {
+            $(".boxcashin").css({ 'visibility': 'hidden', 'display': 'none', 'opacity': '1.0' }).animate({ opacity: 0.0 }, 400);
+            $(this).addClass('btn-success').removeClass('btn-secondary').html('Cash In <i class="fas fa-plus-circle"></i>');
+        } else if ($(".boxcashout").is(':visible')) {
+            $(".boxcashout").css({ 'visibility': 'hidden', 'display': 'none', 'opacity': '1.0' }).animate({ opacity: 0.0 }, 400);
+            $("#btncashout").addClass('btn-danger').removeClass('btn-secondary').html('Cash Out <i class="fas fa-minus-circle"></i>');
+            $(".boxcashin").css({ 'visibility': 'unset', 'display': 'inherit', 'opacity': '0.0' }).animate({ opacity: 1.0 }, 200);
+            $(this).addClass('btn-secondary').removeClass('btn-success').html('Tutup <i class="fas fa-times-circle"></i>');
+        } else {
+            $(".boxcashin").css({ 'visibility': 'unset', 'display': 'inherit', 'opacity': '0.0' }).animate({ opacity: 1.0 }, 200);
+            $(this).addClass('btn-secondary').removeClass('btn-success').html('Tutup <i class="fas fa-times-circle"></i>');
+        }
+
+    });
+});
+$(document).ready(function() {
+    $(document).on('click', '#btncashout', function() {
+        if ($(".boxcashout").is(':visible')) {
+            $(".boxcashout").css({ 'visibility': 'hidden', 'display': 'none', 'opacity': '1.0' }).animate({ opacity: 0.0 }, 400);
+            $(this).addClass('btn-danger').removeClass('btn-secondary').html('Cash Out <i class="fas fa-minus-circle"></i>');
+        } else if ($(".boxcashin").is(":visible")) {
+            $(".boxcashin").css({ 'visibility': 'hidden', 'display': 'none', 'opacity': '1.0' }).animate({ opacity: 0.0 }, 400);
+            $("#btncashin").addClass('btn-success').removeClass('btn-secondary').html('Cash In <i class="fas fa-plus-circle"></i>');
+            $(".boxcashout").css({ 'visibility': 'unset', 'display': 'inherit', 'opacity': '0.0' }).animate({ opacity: 1.0 }, 200);
+            $(this).addClass('btn-secondary').removeClass('btn-danger').html('Tutup <i class="fas fa-times-circle"></i>');
+        } else {
+            $(".boxcashout").css({ 'visibility': 'unset', 'display': 'inherit', 'opacity': '0.0' }).animate({ opacity: 1.0 }, 200);
+            $(this).addClass('btn-secondary').removeClass('btn-danger').html('Tutup <i class="fas fa-times-circle"></i>');
+        }
+
+    });
+});
+$(document).ready(function() {
+    $(document).on('click', '.cashin', function() {
+        var jumIn = $("input[name=jumIn]").val();
+        var ketIn = $("input[name=ketIn]").val();
+
+        $.ajax({
+            url: 'pengurus/CashIn',
+            type: 'POST',
+            data: {
+                jumIn: jumIn,
+                ketIn: ketIn
+            },
+            dataType: "JSON",
+            success: function(data) {
+                if (data.success) {
+                    $("#saldo").html(data.recent_saldo);
+                    tablekeuangan.draw();
+                }
+            }
+        });
+    });
+});
+
+//============== Animate GSAP
+
+gsap.from('.box-tags', { opacity: 0, duration: 1, y: -50, ease: "power3.out" })

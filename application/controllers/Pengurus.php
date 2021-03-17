@@ -10,6 +10,7 @@ class Pengurus extends CI_Controller
         $this->load->model('tagihan');
         $this->load->model('transaksi');
         $this->load->model('akun');
+        $this->load->model('keuangan');
         $this->load->helper('date');
     }
 
@@ -516,7 +517,7 @@ class Pengurus extends CI_Controller
             echo json_encode($alert);
         }
     }
-
+    //====================== KEUANGAN =======================
     public function index_keuangan()
     {
         if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
@@ -532,5 +533,90 @@ class Pengurus extends CI_Controller
         } else {
             redirect('/');
         }
+    }
+
+    public function getKeuangan()
+    {
+        $bagian = $this->session->userdata('bagian');
+        $list = $this->keuangan->get_datatables_keuangan($bagian);
+        $data = array();
+        $i = 1;
+        foreach ($list as $ku) {
+            $row = array();
+            $row[] = $i++;
+            $row[] = 'Rp. ' . number_format($ku->pemasukan, '0', '', '.');
+            $row[] = 'Rp. ' . number_format($ku->pengeluaran, '0', '', '.');
+            $row[] = 'Rp. ' . number_format($ku->saldo, '0', '', '.');
+            $row[] = ($ku->struk == null) ? '' : '<img src="asset/image/notes.svg" height="30" id="' . $ku->struk . '">';
+            $row[] = $ku->tgl_transaksi;
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->keuangan->count_all_keuangan($bagian),
+            "recordsFiltered" => $this->keuangan->count_filtered_keuangan($bagian),
+            "data" => $data,
+        );
+
+        echo json_encode($output);
+    }
+
+    public function CashIn()
+    {
+        $bagian = $this->session->userdata('bagian');
+        $this->form_validation->set_rules('jumIn', 'JumIn', 'required|numeric|min_length[3]', [
+            'required' => 'Wajib isi nominal!',
+            'numeric' => 'Harus angka!',
+            'min_length' => 'Tidak valid!'
+        ]);
+
+        if ($this->form_validation->run() == false) {
+            $alert = array(
+                'error' => true,
+                'jumIn' => form_error('jumIn'),
+                'ketIn' => form_error('ketIn')
+            );
+
+            echo json_encode($alert);
+        } else {
+            $calsaldo = [
+                'bagian' => $bagian,
+                'jml' => $this->input->post('jumIn', true)
+            ];
+
+            $totsaldo = $this->keuangan->SaldoIn($calsaldo);
+
+            $data = [
+                'pemasukan' => $this->input->post('jumIn', true),
+                'pengeluaran' => 0,
+                'struk' => '',
+                'saldo' => $totsaldo['total'],
+                'tags' => $bagian,
+                'ket' => $this->input->post('ketIn', true)
+            ];
+
+            //======== INSERT KEUANGAN 
+            $this->db->set('tgl_transaksi', 'NOW()', false);
+            $this->db->insert('keuangan', $data);
+
+            // //========= Update Saldo Kas
+            $this->db->set('saldo', $totsaldo['total']);
+            $this->db->update('kas');
+            $this->db->where('jenis_kas', $bagian);
+            $recent_saldo = $this->keuangan->recentSaldo($calsaldo);
+
+            $alert = array('success' => true, 'recent_saldo' => $recent_saldo['saldo']);
+            echo json_encode($alert);
+        }
+    }
+    public function getChart()
+    {
+        $data = [
+            'Listbulan' => $this->keuangan->getBulanChart(),
+            'Countkas' => $this->keuangan->getSaldoChart(),
+
+        ];
+        echo json_encode($data);
     }
 }

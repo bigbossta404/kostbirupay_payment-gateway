@@ -25,7 +25,7 @@
             url: '<?= site_url('/snap/token/') . $user['id_pengguna']; ?>',
             async: true,
             data: {
-                btnpilih: btnpilih,
+                // btnpilih: btnpilih,
                 bulan: bulan,
                 harga: harga,
             },
