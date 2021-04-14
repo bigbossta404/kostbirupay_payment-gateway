@@ -314,12 +314,83 @@ class Tagihan extends CI_Model
         $this->db->from($this->_get_datatables_Twifi());
         return $this->db->count_all_results();
     }
+    //========================= PENGURUS TAGIHAN LISTRIK =======================================
+    var $collistrik_order = array(null, 'bulan', 'datecreate', null);
+    var $collistrik_search = array('bulan', 'datecreate');
+    var $order_listrik = ['idbulan' => 'asc'];
+    private function _get_datatables_Tlistrik()
+    {
 
+        $this->db->select('bl.bulan bulan, datecreate, pbw.id_bulan idbulan, DATE_FORMAT(NOW(), "%Y") tahun');
+        $this->db->from('pembayaran pbw');
+        $this->db->join('list_bulan bl', 'bl.id_bulan = pbw.id_bulan');
+        $this->db->where('DATE_FORMAT(datecreate,"%Y")', 'DATE_FORMAT(NOW(), "%Y")', false);
+        $this->db->where('pbw.ket', 'listrik');
+        $this->db->group_by('pbw.id_bulan');
+
+        $i = 0;
+
+        foreach ($this->collistrik_search as $item) // loop column
+        {
+            if ($_POST['search']['value']) // if datatable send POST for search
+            {
+
+                if ($i === 0) // first loop
+                {
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_POST['search']['value']);
+                } else {
+                    $this->db->or_like($item, $_POST['search']['value']);
+                }
+
+                if (count($this->collistrik_search) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
+            $i++;
+        }
+
+        if (isset($_POST['order'])) // here order processing
+        {
+            $this->db->order_by($this->collistrik_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        } else if (isset($this->order_listrik)) {
+            $order_listrik = $this->order_listrik;
+            $this->db->order_by(key($order_listrik), $order_listrik[key($order_listrik)]);
+        }
+    }
+
+    function get_datatablesTlistrik()
+    {
+        $this->_get_datatables_Tlistrik();
+        if ($_POST['length'] != -1)
+            $this->db->limit($_POST['length'], $_POST['start']);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    function count_filteredTlistrik()
+    {
+        $this->_get_datatables_Twifi();
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function count_allTlistrik()
+    {
+        $this->db->from($this->_get_datatables_Tlistrik());
+        return $this->db->count_all_results();
+    }
+    //==============================
 
     public function wifionbulan()
     {
         $query = $this->db->query('SELECT id_bulan, bulan FROM list_bulan
         WHERE id_bulan NOT IN (SELECT id_bulan FROM pembayaran where ket = "wifi")');
+        return $query->result_array();
+    }
+    public function listrikonbulan()
+    {
+        $query = $this->db->query('SELECT id_bulan, bulan FROM list_bulan
+        WHERE id_bulan NOT IN (SELECT id_bulan FROM pembayaran where ket = "listrik")');
         return $query->result_array();
     }
 
@@ -329,6 +400,14 @@ class Tagihan extends CI_Model
         SELECT 
         CAST((SELECT COUNT(*) FROM transaksi WHERE MONTH(tgl_lunas) = MONTH(CURRENT_TIMESTAMP) AND id_transaksi LIKE '%WIFI%')/
         (SELECT COUNT(*) FROM pengguna_data WHERE active = 1)*100 AS UNSIGNED) AS persenwifi");
+        return $query->row_array();
+    }
+    function getPercentListrik()
+    {
+        $query = $this->db->query("
+        SELECT 
+        CAST((SELECT COUNT(*) FROM transaksi WHERE MONTH(tgl_lunas) = MONTH(CURRENT_TIMESTAMP) AND id_transaksi LIKE '%LIS%')/
+        (SELECT COUNT(*) FROM pengguna_data WHERE active = 1)*100 AS UNSIGNED) AS persenlistrik");
         return $query->row_array();
     }
 
@@ -343,6 +422,23 @@ class Tagihan extends CI_Model
         $this->db->where('pbw.id_bulan', $id[0]);
         $this->db->where('YEAR(pbw.datecreate)', $id[1]);
         $this->db->where('pbw.ket', 'wifi');
+        $this->db->where('p.active', 1);
+
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    function getTransaksi_Listrik($id)
+    {
+        $this->db->select('CONCAT("TGLIS",pbw.id_bayar) idtagih, k.no_kamar nokamar, k.listrik hargalistrik, trw.status status, harga hargadeal');
+        $this->db->from('pembayaran pbw');
+        $this->db->join('list_bulan bl', 'pbw.id_bulan = bl.id_bulan');
+        $this->db->join('kamar k', 'k.id_kamar = pbw.id_kamar', 'left');
+        $this->db->join('pengguna_data p', ' k.id_kamar = p.id_kamar', 'left');
+        $this->db->join('transaksi trw', 'trw.id_bayar = pbw.id_bayar', 'left');
+        $this->db->where('pbw.id_bulan', $id[0]);
+        $this->db->where('YEAR(pbw.datecreate)', $id[1]);
+        $this->db->where('pbw.ket', 'listrik');
+        $this->db->where('p.active', 1);
 
         $query = $this->db->get();
         return $query->result_array();
@@ -352,15 +448,20 @@ class Tagihan extends CI_Model
 
     function getKamar_Wifi($id)
     {
-        $query = $this->db->query("SELECT k.id_kamar, no_kamar FROM kamar k JOIN pengguna_data pd ON k.`id_kamar` = pd.`id_kamar` WHERE k.id_kamar NOT IN (SELECT id_kamar FROM pembayaran WHERE ket = 'wifi' AND id_bulan = " . $id[0] . ")");
+        $query = $this->db->query("SELECT k.id_kamar, no_kamar FROM kamar k JOIN pengguna_data pd ON k.`id_kamar` = pd.`id_kamar` WHERE k.id_kamar NOT IN (SELECT id_kamar FROM pembayaran WHERE ket = 'wifi' AND id_bulan = " . $id[0] . ") AND pd.active = 1");
         return $query->result_array();
     }
-    function getDetKamar_Wifi($idkamar)
+    function getKamar_Listrik($id)
     {
-        $this->db->select("pd.nama nama, k.wifi");
+        $query = $this->db->query("SELECT k.id_kamar, no_kamar FROM kamar k JOIN pengguna_data pd ON k.`id_kamar` = pd.`id_kamar` WHERE k.id_kamar NOT IN (SELECT id_kamar FROM pembayaran WHERE ket = 'listrik' AND id_bulan = " . $id[0] . ") AND pd.active = 1");
+        return $query->result_array();
+    }
+    function getDetKamarM($datadump)
+    {
+        $this->db->select("pd.nama nama, k." . $datadump['bagian'] . " " . $datadump['bagian'] . "");
         $this->db->from('kamar k');
         $this->db->join('pengguna_data pd', 'pd.id_kamar = k.id_kamar');
-        $this->db->where("k.id_kamar", $idkamar);
+        $this->db->where("k.id_kamar", $datadump['idkamar']);
         $query = $this->db->get();
         return $query->row_array();
     }

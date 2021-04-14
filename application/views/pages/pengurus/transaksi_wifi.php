@@ -5,7 +5,7 @@
         </nav>
         <div class="container-fluid contentpengurus">
             <div class="headcontent">
-                <h2>Transaksi Wifi</h2>
+                <h2>Transaksi Listrik</h2>
                 <div class="px-3">
                     <button type="button" class="btn btn-primary" id="tambahtagihan">
                         Tagihan <i class="fas fa-plus-circle"></i>
@@ -17,7 +17,7 @@
                     <div class="card bodycontent shadow">
                         <div class="card-body d-flex">
                             <div class="col-xl-3">
-                                <select class="form-control border-primary nokamarwifi" name="kamar">
+                                <select class="form-control border-primary nokamarnewtransak" name="kamar">
                                     <option value="zero" selected>Pilih Kamar</option>
                                     <?php foreach ($kamar as $k) : ?>
                                         <option value="<?php echo $k['id_kamar'] ?>"><?php echo $k['no_kamar']; ?></option>
@@ -31,7 +31,7 @@
                                 <input type="text" class="form-control  border-primary jum" placeholder="0" value="0,00">
                             </div>
                             <div class="ml-auto">
-                                <button class="btn btn-primary newtagihanwifi" id="<?php echo $this->uri->segment(2) ?>">Tambah <i class="fas fa-plus-circle"></i></button>
+                                <button class="btn btn-primary newtagihan" id="<?php echo $this->uri->segment(3) ?>">Tambah <i class="fas fa-plus-circle"></i></button>
                             </div>
                         </div>
                     </div>

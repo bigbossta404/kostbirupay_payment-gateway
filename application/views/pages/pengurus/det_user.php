@@ -58,7 +58,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Tagihan</label>
-                                <input type="text" name="tagihanwifi" id="tagihanwifi" class="form-control border border-info" value="<?= $detkamar['wifi'] ?>">
+                                <input type="text" name="tagihanwifi" id="tagihanwifi" class="form-control border border-info" value="<?= number_format($detkamar[$bagian], '0', '', ',') ?>">
                                 <small class="text-danger" id="tagihanwifi_error"></small>
                             </div>
                             <div class="form-group">

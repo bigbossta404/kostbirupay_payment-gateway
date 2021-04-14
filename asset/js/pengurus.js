@@ -1,3 +1,40 @@
+//============== Feature ============
+var format = function(num) {
+    var str = num.toString().replace("Rp ", ""),
+        parts = false,
+        output = [],
+        i = 1,
+        formatted = null;
+    if (str.indexOf(".") > 0) {
+        parts = str.split(".");
+        str = parts[0];
+    }
+    str = str.split("").reverse();
+    for (var j = 0, len = str.length; j < len; j++) {
+        if (str[j] != ",") {
+            output.push(str[j]);
+            if (i % 3 == 0 && j < (len - 1)) {
+                output.push(",");
+            }
+            i++;
+        }
+    }
+    formatted = output.reverse().join("");
+    return (formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
+};
+$(function() {
+    $(".jumIn").keyup(function(e) {
+        $(this).val(format($(this).val()));
+    });
+    $(".jumOut").keyup(function(e) {
+        $(this).val(format($(this).val()));
+    });
+    $("#tagihanwifi").keyup(function(e) {
+        $(this).val(format($(this).val()));
+    });
+
+});
+//==================================
 $(document).ready(function() {
     $("#btn_tambah").click(function(e) {
         e.preventDefault();
@@ -182,7 +219,9 @@ $(document).on('click', '.btn_up_users', function() {
     var pass = $('#password').val();
     var kamar = $('#kamar').val();
     var tagihanwifi = $('#tagihanwifi').val();
-
+    var tagihandetusr = tagihanwifi
+    tagihandetusr = tagihandetusr.replace(/\,/g, '')
+    tagihandetusr = Number(tagihandetusr)
     $.ajax({
         url: user + "/update",
         type: "POST",
@@ -196,7 +235,7 @@ $(document).on('click', '.btn_up_users', function() {
             newpass: newpass,
             pass: pass,
             kamar: kamar,
-            tagihanwifi: tagihanwifi,
+            tagihandetusr: tagihandetusr,
 
         },
         dataType: "JSON",
@@ -233,8 +272,8 @@ $(document).on('click', '.btn_up_users', function() {
                 } else {
                     $('#newpassword_error').html('');
                 }
-                if (data.tagihanwifi_error != '') {
-                    $('#tagihanwifi_error').html(data.tagihanwifi_error);
+                if (data.tagihandetusr_error != '') {
+                    $('#tagihanwifi_error').html(data.tagihandetusr_error);
                 } else {
                     $('#tagihanwifi_error').html('');
                 }
@@ -268,10 +307,10 @@ $(document).on('click', '.btn_up_users', function() {
     });
 });
 
-$(document).on('click', '#btntagihanwifi', function() {
+$(document).on('click', '#btntagihan', function() {
     var idbulan = $('#pickbulanwifi').val();
     $.ajax({
-        url: "pengurus/create_tagihanwifi",
+        url: "pengurus/create_tagihan",
         type: "POST",
         data: {
             idbulan: idbulan
@@ -279,7 +318,7 @@ $(document).on('click', '#btntagihanwifi', function() {
         dataType: "JSON",
         success: function(data) {
             if (data.success) {
-                tablewifi.draw();
+                tabletagihanpengurus.draw();
                 Swal.fire(
                     'Tagihan Baru!',
                     'Berhasil menambahkan tagihan baru.',
@@ -361,11 +400,9 @@ $(document).ready(function() {
     });
 });
 
-var tablewifi;
+var tabletagihanpengurus;
 $(document).ready(function() {
-
-    //datatables
-    tablewifi = $('#tabletagihanwifi_peng').DataTable({
+    tabletagihanpengurus = $('#tabletagihan_peng').DataTable({
 
         "language": {
             "emptyTable": "Tidak Ada Tagihan",
@@ -376,7 +413,7 @@ $(document).ready(function() {
         "serverSide": true, //Feature control DataTables' server-side processing mode.
         "order": [],
         ajax: {
-            url: "pengurus/readtagihanwifi",
+            url: "pengurus/readtagihan",
             type: "POST"
         },
         "columnDefs": [{
@@ -396,10 +433,9 @@ $(document).ready(function() {
         // var tahun = idMY[1];
 
         $.ajax({
-            url: "../pengurus/getTransaksi_wifi_bulan",
+            url: "../../pengurus/getTransaksi_wifi_bulan",
             data: {
                 idbulan: idbulan,
-                // tahun: tahun
             },
             type: "POST",
             success: function(result) {
@@ -432,19 +468,20 @@ $(document).ready(function() {
     });
 });
 $(document).ready(function() {
-    $("select.nokamarwifi").change(function() {
+    $("select.nokamarnewtransak").change(function() {
         var idkamar = $(this).children("option:selected").val();
         $.ajax({
-            url: "../pengurus/getDetKamar_Wifi/" + idkamar,
+            url: "../../pengurus/getDetKamar/" + idkamar,
             type: "GET",
             dataType: "JSON",
             success: function(data) {
+                console.log(data.nama)
                 if (data == null) {
                     $("input.nama").val("Kosong");
                     $("input.jum").val("0,00");
                 } else {
                     $("input.nama").val(data.nama);
-                    $("input.jum").val(data.wifi);
+                    (data.wifi == null) ? $("input.jum").val(data.listrik): $("input.jum").val(data.wifi);
                 }
             }
         })
@@ -465,11 +502,12 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $(document).on('click', '.newtagihanwifi', function() {
+
+    $(document).on('click', '.newtagihan', function() {
         var idbulan = $(this).attr('id');
-        var idkamar = $('select.nokamarwifi').val();
+        var idkamar = $('select.nokamarnewtransak').val();
         $.ajax({
-            url: "../pengurus/newTagihan_Wifi",
+            url: "../../pengurus/newTagihan",
             type: "POST",
             data: {
                 idkamar: idkamar,
@@ -533,24 +571,95 @@ $(document).ready(function() {
 });
 $(document).ready(function() {
     $(document).on('click', '.cashin', function() {
-        var jumIn = $("input[name=jumIn]").val();
+        var jumIn = $("input[name=jumIn]").val(); //mentahan masih ada koma
         var ketIn = $("input[name=ketIn]").val();
-
-        $.ajax({
-            url: 'pengurus/CashIn',
-            type: 'POST',
-            data: {
-                jumIn: jumIn,
-                ketIn: ketIn
-            },
-            dataType: "JSON",
-            success: function(data) {
-                if (data.success) {
-                    $("#saldo").html(data.recent_saldo);
-                    tablekeuangan.draw();
+        var jumIndb = jumIn
+        jumIndb = jumIndb.replace(/\,/g, '')
+        jumIndb = Number(jumIndb)
+        if (jumIn == 0) {
+            alert('Opps, cek data');
+        } else {
+            Swal.fire({
+                title: 'Yakin tambah catatan?',
+                text: 'Sejumlah Rp. ' + jumIn,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Batal',
+                confirmButtonText: 'Tambah!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'pengurus/CashIn',
+                        type: 'POST',
+                        data: {
+                            jumIndb: jumIndb,
+                            ketIn: ketIn
+                        },
+                        dataType: "JSON",
+                        success: function(data) {
+                            if (data.success) {
+                                Swal.fire(
+                                    'Catatan Masuk!',
+                                    'Data berhasil ditambah.',
+                                    'success'
+                                );
+                                $("#saldo").html(data.recent_saldo);
+                                tablekeuangan.draw();
+                            }
+                        }
+                    });
                 }
-            }
-        });
+            });
+        }
+
+    });
+});
+$(document).ready(function() {
+    $(document).on('click', '.cashout', function() {
+        var jumOut = $("input[name=jumOut]").val();
+        var ketOut = $("input[name=ketOut]").val();
+        var jumOutdb = jumOut
+        jumOutdb = jumOutdb.replace(/\,/g, '')
+        jumOutdb = Number(jumOutdb)
+        if (jumOut == 0) {
+            alert('Opps, cek data');
+        } else {
+            Swal.fire({
+                title: 'Yakin tarik tunai?',
+                text: 'Penarikan sejumlah Rp. ' + jumOut,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Batal',
+                confirmButtonText: 'Tarik!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'pengurus/CashOut',
+                        type: 'POST',
+                        data: {
+                            jumOutdb: jumOutdb,
+                            ketOut: ketOut
+                        },
+                        dataType: "JSON",
+                        success: function(data) {
+                            if (data.success) {
+                                Swal.fire(
+                                    'Catatan Masuk!',
+                                    'Penarikan berhasil.',
+                                    'success'
+                                );
+                                $("#saldo").html(data.recent_saldo);
+                                tablekeuangan.draw();
+                            }
+                        }
+                    });
+                }
+            });
+        }
     });
 });
 

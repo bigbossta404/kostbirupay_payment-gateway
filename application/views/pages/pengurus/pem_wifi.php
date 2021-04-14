@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                                 <div class="btntagihan">
-                                    <button type="button" class="btn btn-primary" id="btntagihanwifi">
+                                    <button type="button" class="btn btn-primary" id="btntagihan">
                                         Tagihan <i class="fas fa-plus-circle"></i>
                                     </button>
                                 </div>
@@ -51,7 +51,7 @@
                     <div class="card bodycontent shadow">
                         <div class="card-body">
                             <div class="tab-pane table-responsive">
-                                <table id="tabletagihanwifi_peng" class="table table-striped table-bordered " width="100%" cellspacing="0">
+                                <table id="tabletagihan_peng" class="table table-striped table-bordered " width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <td>No</td>

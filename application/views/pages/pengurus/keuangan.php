@@ -12,7 +12,16 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                         Total Kas</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><span class="h6 text-gray-800">Rp.</span> <span id="saldo"><?= ($getsaldo['kaswifi'] == null) ?  "0" : number_format($getsaldo['kaswifi'], '0', '', '.'); ?></span></div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><span class="h6 text-gray-800">Rp.</span>
+                                        <span id="saldo">
+                                            <?php
+                                            if ($bagian == 'wifi') {
+                                                echo ($getsaldo['kaswifi'] == null) ?  "0" : number_format($getsaldo['kaswifi'], '0', '', '.');
+                                            } else {
+                                                echo ($getsaldo['kaslistrik'] == null) ?  "0" : number_format($getsaldo['kaslistrik'], '0', '', '.');
+                                            } ?>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-wallet fa-2x text-gray-300"></i>
@@ -71,10 +80,10 @@
                     <div class="card bodycontent shadow">
                         <div class="card-body d-flex">
                             <div class="col-xl-3">
-                                <input type="text" class="form-control  border-primary jumOut" placeholder="Rp 0,00" value="">
+                                <input type="text" class="form-control  border-primary jumOut" name="jumOut" placeholder="Rp 0,00">
                             </div>
                             <div class="col-xl-3">
-                                <input type="text" class="form-control  border-primary ketOut" placeholder="Keterangan" value="">
+                                <input type="text" class="form-control  border-primary ketOut" name="ketOut" placeholder="Keterangan">
                             </div>
                             <div class="ml-auto">
                                 <button class="btn btn-danger cashout" id="">Tarik <i class="fas fa-minus-circle"></i></button>

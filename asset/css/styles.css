@@ -1,15 +1,62 @@
+#profile {
+    cursor: pointer;
+    border-radius: 100%;
+    width: 170px;
+    height: 170px;
+    margin: 0 auto;
+    position: relative;
+    background: #f4f4f4;
+    display: table;
+    background-size: cover;
+    background-position: center center;
+    box-shadow: 0px 1px 7px rgb(0 0 0 / 35%);
+}
+
+#profile label {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0 30px;
+    color: grey;
+    opacity: 1;
+    font-size: 15px;
+}
+
+#profile.dragging {
+    background-image: none !important;
+}
+
+#profile.dragging .dashes {
+    animation-duration: 10s;
+    animation-name: spin;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    opacity: 1 !important;
+}
+
+#profile.dragging label {
+    opacity: 0.5 !important;
+}
+
+#profile.hasImage .dashes,
+#profile.hasImage label {
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+}
+
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
 }
 
 .sb-sidenav {
-    background: linear-gradient(0.40turn, #6060FF, #2202B7);
+    background: linear-gradient(0.4turn, #6060FF, #2202B7);
     color: #ffffff;
 }
 
 .bg-register-image {
     width: 48%;
-    background: url('../image/rightregister.png');
+    background: url("../image/rightregister.png");
     background-position: center;
     background-size: 120%;
     background-repeat: no-repeat;
@@ -36,7 +83,7 @@ body {
 
 input,
 select {
-    font-size: .9rem !important;
+    font-size: 0.9rem !important;
 }
 
 .pickbulan .form-group {
@@ -204,12 +251,12 @@ select {
 }
 
 #nonlunas {
-    background-color: rgb(124, 0, 0);
+    background-color: #7c0000;
     color: #ffffff;
 }
 
 #lunas {
-    background-color: rgb(17, 114, 17);
+    background-color: #117211;
     color: #ffffff;
 }
 
@@ -223,7 +270,7 @@ select {
 
 .btn-default.active {
     background-color: #4f47eb;
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 .rowtagihan {
@@ -354,7 +401,7 @@ select {
     background-size: cover;
     /* text-transform: uppercase; */
     color: black;
-    border: 1px solid rgb(0 0 0 / 27%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.27) !important;
 }
 
 .bodytransaksi-right {
@@ -369,7 +416,7 @@ select {
     background-size: cover;
     /* text-transform: uppercase; */
     color: black;
-    border: 1px solid rgb(0 0 0 / 27%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.27) !important;
 }
 
 .ribbon:nth-child(even) {
@@ -393,7 +440,7 @@ select {
     text-transform: uppercase;
     color: #ffffff;
     background: #00B3ED;
-    box-shadow: -1px 2px 3px rgba(0, 0, 0, .3);
+    box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.3);
 }
 
 .ribbon4:before,
@@ -447,7 +494,7 @@ select {
 }
 
 .vl {
-    border-left: 3px dashed rgb(128, 128, 128);
+    border-left: 3px dashed gray;
     height: 100%;
     position: absolute;
     left: 50%;
@@ -473,6 +520,11 @@ select {
 
 table {
     color: #000 !important;
+}
+
+.invenwifi,
+.invenlis {
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 768px) {
@@ -509,3 +561,6 @@ table {
         margin-right: 6%;
     }
 }
+
+
+/*# sourceMappingURL=styles.css.map */

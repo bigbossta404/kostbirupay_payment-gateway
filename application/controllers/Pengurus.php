@@ -25,7 +25,7 @@ class Pengurus extends CI_Controller
             $data['getsaldo'] = $this->transaksi->get_saldo();
             $data['online'] = $this->akun->getOnline();
             $data['persen'] = $this->tagihan->getPercentWifi();
-            // echo $data['getdebit']['uangwifi'];
+
             $data['title'] = 'Dashboard';
             $this->load->view('layout/pengurus/header_pengurus', $data);
             $this->load->view('pages/pengurus/pengurus_wifi', $data);
@@ -34,15 +34,14 @@ class Pengurus extends CI_Controller
             $username = $this->session->userdata('username');
 
             $data['pengurus'] = $this->akun->getakunpengurus($username);
-            $data['getdebitwifi'] = $this->transaksi->get_monthly_wifi();
             $data['getdebitlistrik'] = $this->transaksi->get_monthly_listrik();
             $data['getsaldo'] = $this->transaksi->get_saldo();
             $data['online'] = $this->akun->getOnline();
-            $data['persen'] = $this->tagihan->getPercentWifi();
-            // echo $data['getdebit']['uangwifi'];
+            $data['persen'] = $this->tagihan->getPercentListrik();
+
             $data['title'] = 'Dashboard';
             $this->load->view('layout/pengurus/header_pengurus', $data);
-            $this->load->view('pages/pengurus/pengurus_wifi', $data);
+            $this->load->view('pages/pengurus/pengurus_listrik', $data);
             $this->load->view('layout/pengurus/footer_pengurus');
         } else {
             redirect('/');
@@ -102,8 +101,9 @@ class Pengurus extends CI_Controller
 
     public function getdetakunuser($username)
     {
-        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+        if ($this->session->userdata('akses') == '2') {
             $pengurususer = $this->session->userdata('username');
+            $data['bagian'] = $this->session->userdata('bagian');
             $data['pengurus'] = $this->akun->getakunpengurus($pengurususer);
             $data['user'] = $this->akun->getakun($username);
             $data['kamar'] = $this->akun->getkamar();
@@ -113,8 +113,6 @@ class Pengurus extends CI_Controller
             $this->load->view('layout/pengurus/header_pengurus', $data);
             $this->load->view('pages/pengurus/det_user', $data);
             $this->load->view('layout/pengurus/footer_pengurus');
-        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
@@ -122,7 +120,7 @@ class Pengurus extends CI_Controller
 
     public function buatakun()
     {
-        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+        if ($this->session->userdata('akses') == '2') {
             $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
                 'required' => 'Nama wajib isi'
             ]);
@@ -185,26 +183,22 @@ class Pengurus extends CI_Controller
                 echo json_encode($alert);
                 $this->akun->daftar($data);
             }
-        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
     }
     public function getactivedata($id_pengguna)
     {
-        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+        if ($this->session->userdata('akses') == '2') {
             $data = $this->akun->getakunByID($id_pengguna);
             echo json_encode($data);
-        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
     }
     public function updateactive()
     {
-        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+        if ($this->session->userdata('akses') == '2') {
             $this->form_validation->set_rules('active', 'Active', 'required|trim|numeric', [
                 'required' => 'Wajib pilih mas',
                 'numeric' => 'Gk usah jail reload dulu'
@@ -251,8 +245,6 @@ class Pengurus extends CI_Controller
                     echo json_encode($alert);
                 }
             }
-        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
@@ -260,10 +252,8 @@ class Pengurus extends CI_Controller
 
     public function hapusakun($id)
     {
-        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+        if ($this->session->userdata('akses') == '2') {
             $this->akun->hapusByID($id);
-        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
@@ -271,11 +261,12 @@ class Pengurus extends CI_Controller
 
     public function updateuser()
     {
-        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+        if ($this->session->userdata('akses') == '2') {
+            $bagian = $this->session->userdata('bagian');
             $id = $this->input->post('id', true);
             $user = $this->input->post('user');
             $cekpass = $this->input->post('newpass');
-            $cekwifi = $this->input->post('tagihanwifi');
+            $cektagihan = $this->input->post('tagihandetusr');
             $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
                 'required' => 'Nama wajib isi'
             ]);
@@ -299,7 +290,7 @@ class Pengurus extends CI_Controller
                 'required' => 'Pilih kamar',
                 'numeric' => 'Data kamar tidak valid'
             ]);
-            $this->form_validation->set_rules('tagihanwifi', 'Tagihanwifi', 'required|trim|numeric', [
+            $this->form_validation->set_rules('tagihandetusr', 'Tagihandetusr', 'required|trim|numeric', [
                 'required' => 'Isi nominal tagihan wifi',
                 'numeric' => 'Data tagihan tidak valid'
             ]);
@@ -313,7 +304,7 @@ class Pengurus extends CI_Controller
                     'username_error' => form_error('user'),
                     'newpassword_error' => form_error('newpass'),
                     'kamar_error' => form_error('kamar'),
-                    'tagihanwifi_error' => form_error('tagihanwifi')
+                    'tagihandetusr_error' => form_error('tagihandetusr')
                 );
                 echo json_encode($data);
             } else {
@@ -333,8 +324,8 @@ class Pengurus extends CI_Controller
                     ];
 
 
-                    $wifi = "UPDATE kamar k JOIN pengguna_data pd ON pd.id_kamar = k.id_kamar SET wifi = " . $cekwifi . " WHERE pd.id_pengguna = " . $id . " ";
-                    $this->db->query($wifi);
+                    $tagihan = "UPDATE kamar k JOIN pengguna_data pd ON pd.id_kamar = k.id_kamar SET " . $bagian . " = " . $cektagihan . " WHERE pd.id_pengguna = " . $id . " ";
+                    $this->db->query($tagihan);
 
                     $this->db->update('pengguna_data', $data, array('id_pengguna' => $id));
 
@@ -354,8 +345,8 @@ class Pengurus extends CI_Controller
                         'id_kamar' => $this->input->post('kamar', true)
                     ];
 
-                    $wifi = "UPDATE kamar k JOIN pengguna_data pd ON pd.id_kamar = k.id_kamar SET wifi = " . $cekwifi . " WHERE pd.id_pengguna = " . $id . " ";
-                    $this->db->query($wifi);
+                    $tagihan = "UPDATE kamar k JOIN pengguna_data pd ON pd.id_kamar = k.id_kamar SET " . $bagian . " = " . $cektagihan . " WHERE pd.id_pengguna = " . $id . " ";
+                    $this->db->query($tagihan);
 
 
                     $this->db->update('pengguna_data', $data, array('id_pengguna' => $id));
@@ -369,29 +360,35 @@ class Pengurus extends CI_Controller
                     echo json_encode($alert);
                 }
             }
-        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
     }
-    public function index_bayarwifi()
+    public function index_bayar()
     {
         if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
             $username = $this->session->userdata('username');
+            $data['bagian'] = $this->session->userdata('bagian');
             $data['pengurus'] = $this->akun->getakunpengurus($username);
             $data['bulancek'] = $this->tagihan->wifionbulan();
-            $data['title'] = 'Detail User';
+            $data['title'] = 'Pembayaran';
             $this->load->view('layout/pengurus/header_pengurus', $data);
             $this->load->view('pages/pengurus/pem_wifi', $data);
             $this->load->view('layout/pengurus/footer_pengurus');
         } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
+            $username = $this->session->userdata('username');
+            $data['pengurus'] = $this->akun->getakunpengurus($username);
+            $data['bagian'] = $this->session->userdata('bagian');
+            $data['bulancek'] = $this->tagihan->listrikonbulan();
+            $data['title'] = 'Pembayaran';
+            $this->load->view('layout/pengurus/header_pengurus', $data);
+            $this->load->view('pages/pengurus/pem_listrik', $data);
+            $this->load->view('layout/pengurus/footer_pengurus');
         } else {
             redirect('/');
         }
     }
-    public function readtagihanwifi()
+    public function readtagihan()
     {
         if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
             $list = $this->tagihan->get_datatablesTwifi();
@@ -400,7 +397,7 @@ class Pengurus extends CI_Controller
             foreach ($list as $wf) {
                 $row = array();
                 $row[] = $i++;
-                $row[] = '<a href="pembayaran-wifi/' . $wf->idbulan . '-' . $wf->tahun . '" class="bulanwifi" id="' . $wf->idbulan . ' ' . $wf->tahun . '">' . $wf->bulan . '</a>';
+                $row[] = '<a href="pembayaran/wifi/' . $wf->idbulan . '-' . $wf->tahun . '" class="bulanwifi" id="' . $wf->idbulan . ' ' . $wf->tahun . '">' . $wf->bulan . '</a>';
                 $row[] = $wf->datecreate;
                 $row[] =  '<button class="btn btn-danger btn_hapusakun" id="' . $wf->datecreate . '">Hapus</button>';
                 $data[] = $row;
@@ -415,15 +412,34 @@ class Pengurus extends CI_Controller
 
             echo json_encode($output);
         } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
+            $list = $this->tagihan->get_datatablesTlistrik();
+            $data = array();
+            $i = 1;
+            foreach ($list as $lf) {
+                $row = array();
+                $row[] = $i++;
+                $row[] = '<a href="pembayaran/listrik/' . $lf->idbulan . '-' . $lf->tahun . '" class="bulanwifi" id="' . $lf->idbulan . ' ' . $lf->tahun . '">' . $lf->bulan . '</a>';
+                $row[] = $lf->datecreate;
+                $row[] =  '<button class="btn btn-danger btn_hapusakun" id="' . $lf->datecreate . '">Hapus</button>';
+                $data[] = $row;
+            }
+
+            $output = array(
+                "draw" => $_POST['draw'],
+                "recordsTotal" => $this->tagihan->count_allTlistrik(),
+                "recordsFiltered" => $this->tagihan->count_filteredTlistrik(),
+                "data" => $data,
+            );
+
+            echo json_encode($output);
         } else {
             redirect('/');
         }
     }
-    public function create_tagihanwifi()
+    public function create_tagihan()
     {
         $id = $this->tagihan->get_id_akun();
-
+        $bagian = $this->session->userdata('bagian');
         $this->form_validation->set_rules('idbulan', 'Idbulan', 'required|numeric');
         if ($this->form_validation->run() == false) {
             $data = array(
@@ -436,17 +452,31 @@ class Pengurus extends CI_Controller
         } else {
             $idbulan = $this->input->post('idbulan', true);
             if ($id != null) {
-                foreach ($id as $i) {
-                    $this->db->set('id_bulan', $idbulan);
-                    $this->db->set('id_kamar', $i['id_kamar']);
-                    $this->db->set('ket', 'wifi');
-                    $this->db->set('datecreate', 'NOW()', false);
-                    $this->db->insert('pembayaran');
+                if ($bagian == 'wifi') {
+                    foreach ($id as $i) {
+                        $this->db->set('id_bulan', $idbulan);
+                        $this->db->set('id_kamar', $i['id_kamar']);
+                        $this->db->set('ket', 'wifi');
+                        $this->db->set('datecreate', 'NOW()', false);
+                        $this->db->insert('pembayaran');
+                    }
+                    $data = array(
+                        'success' => true
+                    );
+                    echo json_encode($data);
+                } elseif ($bagian == 'listrik') {
+                    foreach ($id as $i) {
+                        $this->db->set('id_bulan', $idbulan);
+                        $this->db->set('id_kamar', $i['id_kamar']);
+                        $this->db->set('ket', 'listrik');
+                        $this->db->set('datecreate', 'NOW()', false);
+                        $this->db->insert('pembayaran');
+                    }
+                    $data = array(
+                        'success' => true
+                    );
+                    echo json_encode($data);
                 }
-                $data = array(
-                    'success' => true
-                );
-                echo json_encode($data);
             } else {
                 $data = array(
                     'error' => true,
@@ -459,7 +489,7 @@ class Pengurus extends CI_Controller
         }
     }
 
-    public function index_transaksiwifi($idwaktu)
+    public function index_transaksiuser($idwaktu)
     {
         if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
             $username = $this->session->userdata('username');
@@ -473,54 +503,87 @@ class Pengurus extends CI_Controller
             $this->load->view('pages/pengurus/transaksi_wifi', $data);
             $this->load->view('layout/pengurus/footer_pengurus');
         } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
+            $username = $this->session->userdata('username');
+            $data['pengurus'] = $this->akun->getakunpengurus($username);
+            $id = explode('-', $idwaktu);
+            $data['det_tagihan_listrik'] = $this->tagihan->getTransaksi_Listrik($id);
+            $data['kamar'] = $this->tagihan->getKamar_Listrik($id);
+
+            $data['title'] = 'Transaksi User';
+            $this->load->view('layout/pengurus/header_pengurus', $data);
+            $this->load->view('pages/pengurus/transaksi_listrik', $data);
+            $this->load->view('layout/pengurus/footer_pengurus');
         } else {
             redirect('/');
         }
     }
 
-    public function getDetKamar_Wifi($idkamar)
+    public function getDetKamar($idkamar)
     {
-        $data = $this->tagihan->getDetKamar_Wifi($idkamar);
-        echo json_encode($data);
+        if ($this->session->userdata('akses') == 2) {
+            $bagian = $this->session->userdata('bagian');
+            $datadump = array(
+                'idkamar' => $idkamar,
+                'bagian' => $bagian
+            );
+            $data = $this->tagihan->getDetKamarM($datadump);
+            echo json_encode($data);
+        } else {
+            redirect('/');
+        }
     }
 
-    public function newTagihan_Wifi()
+    public function newTagihan()
     {
-
-        // $this->form_validation->set_rules('idkamar', 'IdKamar', 'required|numeric|greater_than[0]');
-        $bulan = $this->input->post('idbulan');
-        $rowbulan = explode('-', $bulan);
-        $this->form_validation->set_rules('idkamar', 'Idkamar', 'required|numeric|greater_than[0]');
-        if ($this->form_validation->run() == false) {
-            $alert = array(
-                'error' => true,
-                'alert' => '<div class="alert alert-warning"><b>ERROR:</b> Tidak valid!<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        if ($this->session->userdata('akses') == 2) {
+            $bagian = $this->session->userdata('bagian');
+            $bulan = $this->input->post('idbulan');
+            $rowbulan = explode('-', $bulan);
+            $this->form_validation->set_rules('idkamar', 'Idkamar', 'required|numeric|greater_than[0]');
+            if ($this->form_validation->run() == false) {
+                $alert = array(
+                    'error' => true,
+                    'alert' => '<div class="alert alert-warning"><b>ERROR:</b> Tidak valid!<button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button> </div>',
-                'msg' => validation_errors()
-            );
-            echo json_encode($alert);
+                    'msg' => validation_errors()
+                );
+                echo json_encode($alert);
+            } else {
+                $alert = array(
+                    'success' => true
+                );
+                if ($bagian == 'wifi') {
+                    $data = [
+                        'id_bulan' => $rowbulan[0],
+                        'id_kamar' => $this->input->post('idkamar'),
+                        'ket' => 'wifi'
+                    ];
+
+                    $this->db->set('datecreate', 'NOW()', false);
+                    $this->db->insert('pembayaran', $data);
+                    echo json_encode($alert);
+                } elseif ($bagian == 'listrik') {
+                    $data = [
+                        'id_bulan' => $rowbulan[0],
+                        'id_kamar' => $this->input->post('idkamar'),
+                        'ket' => 'listrik'
+                    ];
+
+                    $this->db->set('datecreate', 'NOW()', false);
+                    $this->db->insert('pembayaran', $data);
+                    echo json_encode($alert);
+                }
+            }
         } else {
-            $alert = array(
-                'success' => true
-            );
-
-            $data = [
-                'id_bulan' => $rowbulan[0],
-                'id_kamar' => $this->input->post('idkamar'),
-                'ket' => 'wifi'
-            ];
-
-            $this->db->set('datecreate', 'NOW()', false);
-            $this->db->insert('pembayaran', $data);
-            echo json_encode($alert);
+            redirect('/');
         }
     }
     //====================== KEUANGAN =======================
     public function index_keuangan()
     {
-        if ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'wifi') {
+        if ($this->session->userdata('akses') == '2') {
+            $data['bagian'] = $this->session->userdata('bagian');
             $username = $this->session->userdata('username');
             $data['pengurus'] = $this->akun->getakunpengurus($username);
             $data['getsaldo'] = $this->transaksi->get_saldo();
@@ -528,8 +591,6 @@ class Pengurus extends CI_Controller
             $this->load->view('layout/pengurus/header_pengurus', $data);
             $this->load->view('pages/pengurus/keuangan', $data);
             $this->load->view('layout/pengurus/footer_pengurus');
-        } elseif ($this->session->userdata('akses') == '2' && $this->session->userdata('bagian') == 'listrik') {
-            echo 'laman pengurus listrik';
         } else {
             redirect('/');
         }
@@ -537,86 +598,151 @@ class Pengurus extends CI_Controller
 
     public function getKeuangan()
     {
-        $bagian = $this->session->userdata('bagian');
-        $list = $this->keuangan->get_datatables_keuangan($bagian);
-        $data = array();
-        $i = 1;
-        foreach ($list as $ku) {
-            $row = array();
-            $row[] = $i++;
-            $row[] = 'Rp. ' . number_format($ku->pemasukan, '0', '', '.');
-            $row[] = 'Rp. ' . number_format($ku->pengeluaran, '0', '', '.');
-            $row[] = 'Rp. ' . number_format($ku->saldo, '0', '', '.');
-            $row[] = ($ku->struk == null) ? '' : '<img src="asset/image/notes.svg" height="30" id="' . $ku->struk . '">';
-            $row[] = $ku->tgl_transaksi;
-            $data[] = $row;
+        if ($this->session->userdata('akses') == 2) {
+            $bagian = $this->session->userdata('bagian');
+            $list = $this->keuangan->get_datatables_keuangan($bagian);
+            $data = array();
+            $i = 1;
+            foreach ($list as $ku) {
+                $row = array();
+                $row[] = $i++;
+                $row[] = 'Rp. ' . number_format($ku->pemasukan, '0', '', '.');
+                $row[] = 'Rp. ' . number_format($ku->pengeluaran, '0', '', '.');
+                $row[] = 'Rp. ' . number_format($ku->saldo, '0', '', '.');
+                $row[] = ($ku->struk == null) ? '' : '<img src="asset/image/notes.svg" height="30" id="' . $ku->struk . '">';
+                $row[] = $ku->tgl_transaksi;
+                $data[] = $row;
+            }
+
+            $output = array(
+                "draw" => $_POST['draw'],
+                "recordsTotal" => $this->keuangan->count_all_keuangan($bagian),
+                "recordsFiltered" => $this->keuangan->count_filtered_keuangan($bagian),
+                "data" => $data,
+            );
+
+            echo json_encode($output);
+        } else {
+            redirect('/');
         }
-
-        $output = array(
-            "draw" => $_POST['draw'],
-            "recordsTotal" => $this->keuangan->count_all_keuangan($bagian),
-            "recordsFiltered" => $this->keuangan->count_filtered_keuangan($bagian),
-            "data" => $data,
-        );
-
-        echo json_encode($output);
     }
 
     public function CashIn()
     {
-        $bagian = $this->session->userdata('bagian');
-        $this->form_validation->set_rules('jumIn', 'JumIn', 'required|numeric|min_length[3]', [
-            'required' => 'Wajib isi nominal!',
-            'numeric' => 'Harus angka!',
-            'min_length' => 'Tidak valid!'
-        ]);
+        if ($this->session->userdata('akses') == 2) {
+            $bagian = $this->session->userdata('bagian');
+            $this->form_validation->set_rules('jumIndb', 'JumIndb', 'required|numeric|min_length[3]', [
+                'required' => 'Wajib isi nominal!',
+                'numeric' => 'Harus angka!',
+                'min_length' => 'Tidak valid!'
+            ]);
 
-        if ($this->form_validation->run() == false) {
-            $alert = array(
-                'error' => true,
-                'jumIn' => form_error('jumIn'),
-                'ketIn' => form_error('ketIn')
-            );
+            if ($this->form_validation->run() == false) {
+                $alert = array(
+                    'error' => true,
+                    'jumIndb' => form_error('jumIndb'),
+                    'ketIn' => form_error('ketIn')
+                );
 
-            echo json_encode($alert);
+                echo json_encode($alert);
+            } else {
+                $calsaldo = [
+                    'bagian' => $bagian,
+                    'jml' => $this->input->post('jumIndb', true)
+                ];
+
+                $totsaldo = $this->keuangan->SaldoIn($calsaldo);
+
+                $data = [
+                    'pemasukan' => $this->input->post('jumIndb', true),
+                    'pengeluaran' => 0,
+                    'struk' => '',
+                    'saldo' => $totsaldo['total'],
+                    'tags' => $bagian,
+                    'ket' => $this->input->post('ketIn', true)
+                ];
+
+                //======== INSERT KEUANGAN 
+                $this->db->set('tgl_transaksi', 'NOW()', false);
+                $this->db->insert('keuangan', $data);
+
+                // //========= Update Saldo Kas
+                $this->db->set('saldo', $totsaldo['total']);
+                $this->db->update('kas');
+                $this->db->where('jenis_kas', $bagian);
+                $recent_saldo = $this->keuangan->recentSaldo($calsaldo);
+
+                $alert = array('success' => true, 'recent_saldo' => $recent_saldo['saldo']);
+                echo json_encode($alert);
+            }
         } else {
-            $calsaldo = [
-                'bagian' => $bagian,
-                'jml' => $this->input->post('jumIn', true)
-            ];
+            redirect('/');
+        }
+    }
+    public function CashOut()
+    {
+        if ($this->session->userdata('akses') == 2) {
+            $bagian = $this->session->userdata('bagian');
+            $this->form_validation->set_rules('jumOutdb', 'JumOutdb', 'required|numeric|min_length[3]', [
+                'required' => 'Wajib isi nominal!',
+                'numeric' => 'Harus angka!',
+                'min_length' => 'Tidak valid!'
+            ]);
 
-            $totsaldo = $this->keuangan->SaldoIn($calsaldo);
+            if ($this->form_validation->run() == false) {
+                $alert = array(
+                    'error' => true,
+                    'jumOutdb' => form_error('jumOutdb'),
+                    'ketOut' => form_error('ketOut')
+                );
 
-            $data = [
-                'pemasukan' => $this->input->post('jumIn', true),
-                'pengeluaran' => 0,
-                'struk' => '',
-                'saldo' => $totsaldo['total'],
-                'tags' => $bagian,
-                'ket' => $this->input->post('ketIn', true)
-            ];
+                echo json_encode($alert);
+            } else {
+                $calsaldo = [
+                    'bagian' => $bagian,
+                    'jml' => $this->input->post('jumOutdb', true)
+                ];
 
-            //======== INSERT KEUANGAN 
-            $this->db->set('tgl_transaksi', 'NOW()', false);
-            $this->db->insert('keuangan', $data);
+                $totsaldo = $this->keuangan->SaldoOut($calsaldo);
 
-            // //========= Update Saldo Kas
-            $this->db->set('saldo', $totsaldo['total']);
-            $this->db->update('kas');
-            $this->db->where('jenis_kas', $bagian);
-            $recent_saldo = $this->keuangan->recentSaldo($calsaldo);
+                $data = [
+                    'pemasukan' => 0,
+                    'pengeluaran' => $this->input->post('jumOutdb', true),
+                    'struk' => '',
+                    'saldo' => $totsaldo['total'],
+                    'tags' => $bagian,
+                    'ket' => $this->input->post('ketOut', true)
+                ];
 
-            $alert = array('success' => true, 'recent_saldo' => $recent_saldo['saldo']);
-            echo json_encode($alert);
+                //======== INSERT KEUANGAN 
+                $this->db->set('tgl_transaksi', 'NOW()', false);
+                $this->db->insert('keuangan', $data);
+
+                // //========= Update Saldo Kas
+                $this->db->set('saldo', $totsaldo['total']);
+                $this->db->update('kas');
+                $this->db->where('jenis_kas', $bagian);
+                $recent_saldo = $this->keuangan->recentSaldo($calsaldo);
+
+                $alert = array('success' => true, 'recent_saldo' => $recent_saldo['saldo']);
+                echo json_encode($alert);
+            }
+        } else {
+            redirect('/');
         }
     }
     public function getChart()
     {
-        $data = [
-            'Listbulan' => $this->keuangan->getBulanChart(),
-            'Countkas' => $this->keuangan->getSaldoChart(),
+        if ($this->session->userdata('akses') == 2) {
+            $bagian = $this->session->userdata('bagian');
+            $data = [
+                'Listbulan' => $this->keuangan->getBulanChart($bagian),
+                'Countkas' => $this->keuangan->getSaldoChart($bagian),
 
-        ];
-        echo json_encode($data);
+            ];
+            echo json_encode($data);
+        } else {
+            redirect('/');
+        }
     }
 }

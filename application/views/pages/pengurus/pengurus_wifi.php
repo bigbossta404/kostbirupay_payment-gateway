@@ -5,7 +5,7 @@
         </nav>
         <div class="container-fluid contentpengurus">
             <div class="headcontent">
-                <h2>Title</h2>
+                <h2>Beranda</h2>
 
             </div>
             <div class="row box-tags">

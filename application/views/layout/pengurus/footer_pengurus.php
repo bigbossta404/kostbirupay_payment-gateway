@@ -10,11 +10,10 @@
 <script src="<?= base_url('asset/bootstrap/js/bootstrap.min.js') ?>"></script>
 <script src="<?= base_url('asset/datatables/js/dataTables.bootstrap4.min.js') ?>"></script>
 <script src="<?= base_url('asset/vendor/chart.js/Chart.min.js') ?>"></script>
-<script src="<?= base_url('asset/js/demo/chart-area-demo.js') ?>"></script>
 <script src="<?= base_url('asset/js/sweetalert2.min.js') ?>"></script>
 <script src="<?= base_url('asset/js/pengurus.js') ?>"></script>
 <!-- <script src="https://cdn.datatables.net/fixedcolumns/3.3.2/js/dataTables.fixedColumns.min.js"></script> -->
-<!-- <script src="<?= base_url('asset/js/demo/chart-pie-demo.js') ?>"></script> -->
+<script src="<?= base_url('asset/js/demo/chart-area-demo.js') ?>"></script>
 
 </body>
 

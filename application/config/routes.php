@@ -56,26 +56,22 @@ $route['translate_uri_dashes'] = FALSE;
 $route['login'] = 'auth/index';
 $route['/'] = 'auth/index';
 $route['daftar'] = 'auth/daftar';
+
+// Pengguna Index
 $route['beranda'] = 'pengguna/index';  // logged in as admin
-// logged in as admin
-// if (isset($_SESSION['akses']) && $_SESSION['akses'] = '2') {
-// } elseif (isset($_SESSION['akses']) && $_SESSION['akses'] = '3') {
-//     $route['beranda'] = 'pengguna/index';  // logged in as user
-// } else {
-//     $route['/'] = 'auth';  // not logged in, send to login 
-// }
-
-
-
 $route['kost'] = 'pengguna/indexkost';
 $route['listrik'] = 'pengguna/indexlistrik';
 $route['wifi'] = 'pengguna/indexwifi';
+$route['riwayat'] = 'pengguna/index_history_bayar';
+$route['inventaris'] = 'pengguna/index_inventaris';
+$route['profile/usr'] = 'pengguna/index_detakunuser';
 $route['kost/transaksikost-(:any)'] = 'pengguna/det_transaksi/$1';
 
 // Pengurus Routes
 $route['pengurus'] = 'pengurus/index';
-$route['pembayaran-wifi'] = 'pengurus/index_bayarwifi';
-$route['pembayaran-wifi/(:any)-(:any)'] = 'pengurus/index_transaksiwifi/$1-$2';
+$route['pembayaran'] = 'pengurus/index_bayar';
+$route['pembayaran/wifi/(:any)-(:any)'] = 'pengurus/index_transaksiuser/$1-$2';
+$route['pembayaran/listrik/(:any)-(:any)'] = 'pengurus/index_transaksiuser/$1-$2';
 $route['keuangan'] = 'pengurus/index_keuangan';
 // $route['transaksi-wifi/'] = 'pengurus/getTransaksi_wifi_bulan';
 $route['user'] = 'pengurus/index_akunuser';

@@ -15,8 +15,7 @@
   <link href="<?= base_url('asset/css/styles.css') ?>" rel="stylesheet" type="text/css">
   <link href="<?= base_url('asset/css/bootstrap.min.css') ?>" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-  <!-- Custom styles for this template-->
+  <link rel="icon" href="<?= base_url('asset/image/favico.png') ?>" type="image/gif ?>">
   <link href="<?= base_url('asset/css/sb-admin-2.min.css') ?>" rel="stylesheet">
 
 </head>
@@ -36,7 +35,7 @@
             <!-- Nested Row within Card Body -->
 
             <div class="row">
-              <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+              <div class="col-lg-6 d-none d-lg-block bg-login-image border-right"></div>
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="logologin">

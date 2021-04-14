@@ -32,7 +32,7 @@
                             <!-- <p id="nokamar">No. Kamar <?= $user['id_kamar']; ?></p> -->
                         </div>
                         <div class="title-tags" style="background-color: #08006d; padding: 10px; display:flex; align-items: center; justify-content:center">
-                            Pengurus <?= $pengurus['bagian']; ?>
+                            <span class="tags">Pengurus <?= $pengurus['bagian']; ?></span>
                         </div>
                         <div class="sb-menu-top">
                             <a class="nav-link menupilih <?= $this->uri->segment(1) == 'pengurus' ? 'menuaktif' : '' ?>" href="<?= base_url('pengurus'); ?>">
@@ -41,7 +41,7 @@
                                     Beranda
                                 </div>
                             </a>
-                            <a class="nav-link menupilih <?= $this->uri->segment(1) == 'pembayaran-wifi' ? 'menuaktif' : '' ?>" href="<?= base_url('pembayaran-wifi'); ?>">
+                            <a class="nav-link menupilih <?= $this->uri->segment(1) == 'pembayaran' ? 'menuaktif' : '' ?>" href="<?= base_url('pembayaran'); ?>">
                                 <div class="sb-nav-link-icon"><i class="fas fa-scroll"></i></div>
                                 <div class="texticon">
                                     Pembayaran

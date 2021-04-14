@@ -153,11 +153,22 @@ class Snap extends CI_Controller
 				'tgl_invoice' => $result['transaction_time'],
 				'harga' => $result['gross_amount'],
 				'pay_type' => $result['payment_type'],
-				'bank' => $result['va_numbers'][0]['bank'],
-				'va_num' => $result['va_numbers'][0]['va_number'],
+				'bank' => null,
+				'va_num' => null,
 				'pdf_url' => $result['pdf_url'],
 				'status' => $result['status_code']
 			];
+			if ($result['va_numbers'][0]['bank']  != null) {
+				array_replace($data['bank'], $data['bank'] = $result['va_numbers'][0]['bank']);
+				array_replace($data['va_num'], $data['va_num'] = $result['va_numbers'][0]['va_number']);
+			} elseif ($result['payment_type'] == 'echannel') {
+				array_replace($data['bank'], $data['bank'] = 'mandiri');
+				array_replace($data['va_num'], $data['va_num'] = $result['merchant_id']);
+			} elseif ($result['payment_type'] == 'qris') {
+				$data['pdf_status'] = null;
+			} elseif ($result['payment_type'] == 'cstore') {
+				$data['va_num'] = $result['payment_code'];
+			}
 			$simpan = $this->db->insert('transaksi', $data);
 
 			if ($simpan) {
@@ -175,11 +186,27 @@ class Snap extends CI_Controller
 				'tgl_invoice' => $result['transaction_time'],
 				'harga' => $result['gross_amount'],
 				'pay_type' => $result['payment_type'],
-				'bank' => $result['va_numbers'][0]['bank'],
-				'va_num' => $result['va_numbers'][0]['va_number'],
+				'bank' => null,
+				'va_num' => null,
 				'pdf_url' => $result['pdf_url'],
 				'status' => $result['status_code']
 			];
+			if (isset($result['va_numbers'])) {
+				array_replace($data['bank'], $data['bank'] = $result['va_numbers'][0]['bank']);
+				array_replace($data['va_num'], $data['va_num'] = $result['va_numbers'][0]['va_number']);
+			} elseif ($result['payment_type'] == 'echannel') {
+				array_replace($data['bank'], $data['bank'] = 'mandiri');
+				array_replace($data['va_num'], $data['va_num'] = $result['merchant_id']);
+			} elseif ($result['payment_type'] == 'qris') {
+				// var_dump($result);
+				// if ($result['acquirer'] == "airpay shopee") {
+				// 	$data['bank'] = $result['acquirer'];
+				// 	$data['va_num'] = "'" . $result['merchant_id'] . "'";
+				// }
+				$data['pdf_status'] = null;
+			} elseif ($result['payment_type'] == 'cstore') {
+				$data['va_num'] = $result['payment_code'];
+			}
 			$simpan = $this->db->insert('transaksi', $data);
 
 			if ($simpan) {

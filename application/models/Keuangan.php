@@ -71,18 +71,23 @@ class Keuangan extends CI_Model
         $query = $this->db->query("SELECT saldo + " . $calsaldo['jml'] . " total FROM kas WHERE jenis_kas = '" . $calsaldo['bagian'] . "'");
         return $query->row_array();
     }
+    public function SaldoOut($calsaldo)
+    {
+        $query = $this->db->query("SELECT saldo - " . $calsaldo['jml'] . " total FROM kas WHERE jenis_kas = '" . $calsaldo['bagian'] . "'");
+        return $query->row_array();
+    }
     public function recentSaldo($calsaldo)
     {
         $query = $this->db->query("SELECT saldo FROM kas WHERE jenis_kas = '" . $calsaldo['bagian'] . "' ");
         return $query->row_array();
     }
 
-    public function getBulanChart()
+    public function getBulanChart($bagian)
     {
-        $query = $this->db->query("SELECT bulan FROM list_bulan WHERE id_bulan IN (SELECT DATE_FORMAT(tgl_transaksi,'%c') FROM keuangan GROUP BY DATE_FORMAT(tgl_transaksi,'%c')) ORDER BY id_bulan ASC");
+        $query = $this->db->query("SELECT bulan FROM list_bulan WHERE id_bulan IN (SELECT DATE_FORMAT(tgl_transaksi,'%c') FROM keuangan WHERE tags LIKE '%" . $bagian .  "%' GROUP BY DATE_FORMAT(tgl_transaksi,'%c')) ORDER BY id_bulan ASC");
         return $query->result_array();
     }
-    public function getSaldoChart()
+    public function getSaldoChart($bagian)
     {
         $query = $this->db->query("SELECT 
         MAX(saldo) AS totalkas,
@@ -91,7 +96,7 @@ class Keuangan extends CI_Model
  ( SELECT tgl_transaksi,
           first_value(saldo) over 
           (PARTITION BY DATE_FORMAT(tgl_transaksi,'%Y-%m') ORDER BY tgl_transaksi DESC) AS saldo
-    FROM keuangan
+    FROM keuangan WHERE tags LIKE '%" . $bagian .  "%'
  ) l
  GROUP BY DATE_FORMAT(tgl_transaksi,'%Y-%m')");
         return $query->result_array();

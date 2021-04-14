@@ -11180,9 +11180,10 @@ a:focus {
 }
 
 .bg-login-image {
-    background: url('../image/pp.jpg');
+    background: url('../image/rightregister.png');
     background-position: center;
-    background-size: cover
+    background-repeat: no-repeat;
+    background-size: 80%;
 }
 
 .bg-password-image {

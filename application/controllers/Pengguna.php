@@ -232,4 +232,136 @@ class Pengguna extends CI_Controller
             redirect('/');
         }
     }
+    public function index_history_bayar()
+    {
+        if ($this->session->userdata('akses') == '3') {
+            $username = $this->session->userdata('username');
+            $data['user'] = $this->akun->getakun($username);
+            $data['title'] = 'History Pembayaran';
+            // $data['det_transak'] = $this->transaksi->getDetKost($idbayar);
+            $this->load->view('layout/header_pengguna', $data);
+            $this->load->view('pages/historybayar', $data);
+            $this->load->view('layout/footer_pengguna');
+        } else {
+            redirect('/');
+        }
+    }
+    public function history_bayar()
+    {
+        if ($this->session->userdata('akses') == '3') {
+            $id_pengguna = $this->session->userdata('id_pengguna');
+            $list = $this->transaksi->get_datatablesHistory($id_pengguna);
+            $data = array();
+            foreach ($list as $hw) {
+                $row = array();
+                $row[] = $hw->id_transaksi;
+                $row[] = $hw->bulan;
+                $row[] = $hw->harga;
+                $row[] = $hw->pay_type;
+                $row[] = $hw->bank;
+                $row[] = $hw->tgl_invoice;
+                if ($hw->status == 201) {
+                    $row[] = "<button class='btn btn-success' disabled>Invoice</button>";
+                } else {
+                    $row[] = "<button class='btn btn-success'>Invoice</button>";
+                }
+                $data[] = $row;
+            }
+            $output = array(
+                "draw" => $_POST['draw'],
+                "recordsTotal" => $this->transaksi->count_allHistory($id_pengguna),
+                "recordsFiltered" => $this->transaksi->count_filteredHistory($id_pengguna),
+                "data" => $data,
+            );
+
+            echo json_encode($output);
+        } else {
+            redirect('/');
+        }
+    }
+
+    public function index_inventaris()
+    {
+        if ($this->session->userdata('akses') == '3') {
+            $username = $this->session->userdata('username');
+            $data['user'] = $this->akun->getakun($username);
+            $data['title'] = 'Inventaris';
+            $this->load->view('layout/header_pengguna', $data);
+            $this->load->view('pages/inventaris', $data);
+            $this->load->view('layout/footer_pengguna');
+        } else {
+            redirect('/');
+        }
+    }
+
+    public function getInvenWifi()
+    {
+        if ($this->session->userdata('akses') == '3') {
+            $list = $this->transaksi->get_datatables_in_wifi();
+            $data = array();
+            foreach ($list as $iw) {
+                $row = array();
+                $row[] = 'Rp. ' . number_format($iw->pemasukan, '0', '', '.');
+                $row[] = 'Rp. ' . number_format($iw->pengeluaran, '0', '', '.');
+                $row[] = 'Rp. ' . number_format($iw->saldo, '0', '', '.');
+                $row[] = $iw->ket;
+                $row[] = $iw->tgl_transaksi;
+                $row[] = '<a href="" class="btn btn-success"> Struk </a>';
+                $data[] = $row;
+            }
+            $output = array(
+                "draw" => $_POST['draw'],
+                "recordsTotal" => $this->transaksi->count_all_in_w(),
+                "recordsFiltered" => $this->transaksi->count_filtered_in_w(),
+                "data" => $data,
+            );
+
+            echo json_encode($output);
+        } else {
+            redirect('/');
+        }
+    }
+    public function getInvenListrik()
+    {
+        if ($this->session->userdata('akses') == '3') {
+            $list = $this->transaksi->get_datatables_in_listrik();
+            $data = array();
+            foreach ($list as $il) {
+                $row = array();
+                $row[] = 'Rp. ' . number_format($il->pemasukan, '0', '', '.');
+                $row[] = 'Rp. ' . number_format($il->pengeluaran, '0', '', '.');
+                $row[] = 'Rp. ' . number_format($il->saldo, '0', '', '.');
+                $row[] = $il->ket;
+                $row[] = $il->tgl_transaksi;
+                $row[] = '<a href="" class="btn btn-success"> Struk </a>';
+                $data[] = $row;
+            }
+            $output = array(
+                "draw" => $_POST['draw'],
+                "recordsTotal" => $this->transaksi->count_all_in_l(),
+                "recordsFiltered" => $this->transaksi->count_filtered_in_l(),
+                "data" => $data,
+            );
+
+            echo json_encode($output);
+        } else {
+            redirect('/');
+        }
+    }
+    public function index_detakunuser()
+    {
+        if ($this->session->userdata('akses') == '3') {
+            $username = $this->session->userdata('username');
+            $data['user'] = $this->akun->getakun($username);
+            $data['kamar'] = $this->akun->getkamar();
+            $data['detkamar'] = $this->akun->another_getkamar($username);
+
+            $data['title'] = 'Detail User';
+            $this->load->view('layout/header_pengguna', $data);
+            $this->load->view('pages/det_user_low', $data);
+            $this->load->view('layout/footer_pengguna');
+        } else {
+            redirect('/');
+        }
+    }
 }
